@@ -1,0 +1,80 @@
+{
+  "ImageAnalysisMeta": {
+    "ImageQuality": "Good|Blurry|PoorLighting|Obstructed|MultipleImages",
+    "ImageCount": [integer — number of distinct items visible],
+    "ImageCaptureContext": "Indoor|Outdoor|VehicleInterior|Deployment|Unknown",
+    "TamperingFlag": true|false,
+    "PIIDetected": true|false,
+    "StockImageMatchFlag": true|false
+  },
+  "ItemIdentification": {
+    "ItemIdentified": true|false,
+    "ItemDescription": "[concise description of what is visible]",
+    "KitCategory": "IssuedKit|PersonallyPurchasedKit|PersonalElectronics|SLAContents|SFAContents|Valuables|CeremonialDress|PersonalEffects",
+    "ItemSubType": "Smartphone|Laptop|Tablet|Smartwatch|Earbuds|Camera|Console|Boot|Uniform|Webbing|Helmet|Rucksack|SleepingSystem|Sword|Medal|Jewellery|Watch|Bicycle|Furniture|Other",
+    "BrandOrManufacturer": "[brand if visible, else omit]",
+    "ModelIdentifier": "[model if visible, else omit]",
+    "SerialNumberVisible": true|false,
+    "SerialNumberExtracted": "[OCR value if SerialNumberVisible is true, else omit]",
+    "NATOStockNumber": "[NSN if visible, else omit]",
+    "ReceiptOrProofVisible": true|false
+  },
+  "DamageAssessment": {
+    "IsDamagePresent": true|false,
+    "DamageSeverity": "None|Minor|Moderate|Severe|TotalLoss",
+    "WearAndTearVsDamage": "Damage|WearAndTear|Indeterminate",
+    "EstimatedRepairability": "Repairable|ReplaceRecommended|Indeterminate",
+    "ConfidenceScore": [0.00–1.00 decimal],
+    "DamageAreaPercentage": [0.00–1.00 decimal, omit if not assessable],
+    "DamageTypeList": [
+      {
+        "DamageType": "Cracked|Torn|Burnt|Broken|Scratched|Waterlogged|Crushed|Delaminated|MissingParts|Corroded|Melted",
+        "DamageLocation": "[specific location on item, e.g. top-left screen corner, left shoulder seam]",
+        "DamageDimensionMM": "[estimated size if measurable, else omit]"
+      }
+    ]
+  },
+  "MilitaryKitAttributes": {
+    "ServiceBranch": "BritishArmy|RoyalNavy|RoyalMarines|RAF|Unknown",
+    "UniformPatternIdentified": "MTP|DPM|FAD|Blues_No2|Mess|RAFGrey|NavyBlue|CeremonialRed|Unknown",
+    "IsIssuedKit": true|false,
+    "IsTemporarilyIssuedKit": true|false,
+    "OperationalUseEvident": true|false,
+    "RankOrNameTapeVisible": true|false,
+    "CeremonialDressDetected": true|false,
+    "MedalDetected": true|false,
+    "MedalDescription": "[description if MedalDetected is true, else omit]"
+  },
+  "AccomodationDamage": {
+    "LTODamageDetected": true|false,
+    "AccommodationType": "SLA_SingleRoom|SLA_Shared|SFA_MarriedQuarters|NotApplicable",
+    "RoomFabricElement": "Wall|Floor|Ceiling|Door|Window|Fixture|Fitting|WhiteGood|Furniture|Other",
+    "LTODamageSeverity": "Cosmetic|Structural|Major",
+    "LTOEstimatedRepairCost": "[cost bracket if assessable, else omit]"
+  },
+  "FraudRiskAssessment": {
+    "FraudRiskLevel": "Low|Medium|High",
+    "StagedSceneIndicator": true|false,
+    "InconsistentWearAge": true|false,
+    "MultipleClaimIndicator": true|false,
+    "FraudIndicators": [
+      {
+        "IndicatorType": "[short label, e.g. Shadow direction mismatch]",
+        "IndicatorDetail": "[explanation of why this was flagged]"
+      }
+    ]
+  },
+  "SettlementGuidance": {
+    "RecommendedSettlementPath": "AutoApprove|ManualReview|RequestMoreImages|RouteToSIU|DeclineWearTear|DeclineExclusion|LTOSpecialist|MedalOfficeRoute",
+    "ExcessApplicable": [75.00 for Smartphone/Smartwatch/Earbuds, 50.00 for all others],
+    "ReplacementAvailability": "MoDReissue|CommercialPurchase|Discontinued|Unknown",
+    "EstimatedReplacementCost": "[cost range for examiner reference, e.g. £800–£1,100]",
+    "SingleArticleLimitFlag": true|false,
+    "AdditionalImagesRequired": true|false,
+    "AdditionalImagesGuidance": "[specific re-photograph instruction if AdditionalImagesRequired is true, else omit]"
+  },
+  "ClaimSummary": {
+    "ExaminerSummary": "[3–5 sentence paragraph: what was visible, damage observed, military context noted, any flags raised, recommended action. Written for a claims examiner, not the claimant.]",
+    "ClaimantFacingMessage": "[1–2 sentence acknowledgement suitable to send to claimant. Professional, empathetic, no claim decision language.]"
+  }
+}
