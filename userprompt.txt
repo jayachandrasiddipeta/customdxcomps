@@ -1,0 +1,36 @@
+## CLAIM CONTEXT
+You are analysing images submitted for the following insurance claim. Use this context alongside the image(s) to inform your assessment. Do not treat claimant statements as confirmed facts — they provide context only.
+
+Claim reference: {.pyID}
+CauseOfLoss - {.CauseOfLoss}
+ClaimedAmount - {.ClaimedAmount}
+ContactEmail - {.ContactEmail}
+ContactNumber - {.ContactNumber}
+DateOfLoss - {.DateOfLoss}
+FirstName - {.FirstName}
+LastName - {.LastName}
+IncidentDescription - {.IncidentDescription}
+ItemDescription - {.ItemDescription}
+LossType = {.LossType}
+PolicyNumber - {.PolicyNumber}
+PurchasePrice - {.PurchasePrice}
+
+
+## IMAGE(S) FOR ASSESSMENT
+[The attached image(s) are provided above this message. Assess all submitted images together as evidence for this single claim line.]
+
+## EXTRACTION TASK
+Analyse the image(s) carefully and extract ALL of the following fields into a single JSON object. Follow the schema exactly.
+
+Assess in this order:
+1. First evaluate image quality and suitability — if ImageQuality is Blurry, PoorLighting, or Obstructed, still complete as many fields as possible but set ConfidenceScore low and AdditionalImagesRequired to true.
+2. Identify what item(s) are visible and classify them.
+3. Assess damage — distinguish carefully between accidental/sudden damage and gradual wear and tear.
+4. Apply military kit context — look for service indicators, NSN labels, name tapes, operational markings.
+5. Check for LtO indicators — is accommodation fabric (walls, floors, fixtures) damaged?
+6. Apply fraud awareness — note any anomalies without making accusations.
+7. Determine the settlement path based on your findings.
+8. Write the ExaminerSummary last, after all other fields are populated.
+
+## REQUIRED JSON SCHEMA
+Respond with ONLY the JSON structure defined or populated in this property {.ImageOutputJSON}. All enum values are listed; use only the exact strings shown. 
