@@ -1,15 +1,6 @@
 ## CLAIM CONTEXT
 You are analysing images submitted for the following insurance claim. Use this context alongside the image(s) to inform your assessment. Do not treat claimant statements as confirmed facts — they provide context only.
 
-Client ID : 253b8515-ef0b-451e-8e4f-8fccf41dfd55
-
-Tenant ID : 7f831e83-59f7-4a5d-8bd3-6d7b3838bdb2
-
-Pega-Email-Secret
-
-    Value : wuc8Q~GMLzdcyRaEydEOnC2pDmDrq_VpMTvw6cry
-    
-    SecretID : 523dc8f0-bce7-452e-988e-6fec3eb4b141
 
 Claim reference: {.pyID}
 CauseOfLoss - {.CauseOfLoss}
