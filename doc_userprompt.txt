@@ -1,117 +1,42 @@
 Extract structured data from the attached insurance policy schedule document 
 and return it as a single JSON object matching the schema below exactly.
 
-DOCUMENT TO PROCESS:
-{{ExtractedDocumentText}}
-
---- 
+---
 
 REQUIRED OUTPUT SCHEMA:
 
-{
-  "PolicySchedule": {
-    "DocumentMetadata": {
-      "DocumentType": "string",
-      "FormReference": "string",
-      "InsuranceProvider": "string",
-      "PageCount": "integer",
-      "ExtractionWarning": "string or null"
-    },
-    "PolicyHolder": {
-      "InsuredName": "string",
-      "InsuredAddressLine1": "string",
-      "InsuredAddressLine2": "string or null",
-      "InsuredCity": "string",
-      "InsuredCounty": "string",
-      "InsuredPostcode": "string"
-    },
-    "InsurerDetails": {
-      "PrimaryInsurer": "string",
-      "PrimaryInsurerSectionsCovered": "string",
-      "SecondaryInsurer": "string or null",
-      "SecondaryInsurerSectionsCovered": "string or null"
-    },
-    "PolicyIdentifiers": {
-      "CertificateOfInsuranceNumber": "string",
-      "MembershipNumber": "string"
-    },
-    "PolicyPeriod": {
-      "PeriodStartDate": "string, as written in document",
-      "PeriodEndDate": "string, as written in document"
-    },
-    "PremiumDetails": {
-      "MonthlyPremiumAmount": "number",
-      "Currency": "string",
-      "AdministrationFeeMultiSection": "number or null",
-      "AdministrationFeeSingleSection": "number or null",
-      "LegalExpensesFee": "number or null",
-      "IPTRatePercent": "number or null"
-    },
-    "CoverSections": [
-      {
-        "SectionNumber": "string",
-        "SectionDescription": "string",
-        "LimitAmount": "number or null",
-        "Currency": "string"
-      }
-    ],
-    "ItemisedValuables": [
-      {
-        "ItemDescription": "string",
-        "ItemValue": "number"
-      }
-    ],
-    "ContentsLocation": {
-      "ContentsAddressSameAsInsured": "boolean",
-      "AlternateContentsAddress": "string or null"
-    },
-    "ExcessStructure": {
-      "StandardExcess": "number or null",
-      "MobilePhoneExcess": "number or null",
-      "JewelleryWatchExcessBands": [
-        {
-          "ValueRangeLow": "number",
-          "ValueRangeHigh": "number",
-          "ExcessAmount": "number"
-        }
-      ],
-      "ContentsInStorageStandardExcess": "number or null",
-      "ContentsInStorageAccidentalDamageExcess": "number or null"
-    },
-    "Endorsements": [
-      "string"
-    ],
-    "DeclarationAndSignature": {
-      "SignaturePresent": "boolean",
-      "SignatureDate": "string or null"
-    },
-    "StatementOfFact": {
-      "PreviousInsuranceDeclinedCancelledOrSpecialTerms": "boolean or null",
-      "UnspentCriminalConvictionsOrPendingCharges": "boolean or null",
-      "BankruptcyOrPendingCCJ": "boolean or null",
-      "PriorClaimsLossesLiabilitiesLast3Years": "boolean or null",
-      "DisclosedClaimDetails": "string or null",
-      "ChangeInCircumstancesAcknowledged": "boolean or null"
-    }
-  }
-}
+
 
 FIELD-SPECIFIC INSTRUCTIONS:
-- DocumentType: identify from the document title (e.g. "Schedule of Insurance").
-- FormReference: the small form/version code usually printed bottom-left of 
-  each page footer (e.g. "TRIKHSCH_10/2024").
-- InsuranceProvider: the brand name shown in the document header/logo, not the 
-  underwriter named in the insurer field.
-- CoverSections: create one array entry per distinct limit figure in the 
-  section table, even if multiple limits fall under the same section number.
-- ItemisedValuables: extract only if the itemised valuables table has actual 
-  rows filled in; if the table is present but blank, return an empty array.
-- ExcessStructure: extract the excess table typically found under an 
-  "Endorsements" or "Excess" heading, separate from the main schedule table.
-- Endorsements: list each distinct endorsement as a separate string; if the 
-  endorsements section is blank/empty, return an empty array.
-- StatementOfFact: extract Yes/No answers to the declaration questions; if 
-  any answer is "Yes", also extract the accompanying disclosed details text 
-  if present.
+- CoverageScope: extract the note usually printed directly beneath the 
+  document title, defining which sections/persons the policy covers.
+- CoverSections: group every line item by its printed section number. A 
+  section with multiple named items (e.g. Section One, Three, Six) must 
+  produce multiple LineItems entries under ONE SectionNumber, not multiple 
+  top-level sections.
+- CoverSections[].LineItems[].LimitType: set to "NotOptedIn" if the printed 
+  limit is £0 or equivalent; "Included" if the printed value is a word like 
+  "Included" rather than a figure; "MonetaryLimit" otherwise.
+- ItemisedValuables.ThresholdRules: extract even when the Items table is 
+  empty — usually printed as a caption directly above/below the table.
+- ItemisedValuables: if the table has two side-by-side Description/Value 
+  column-pairs, read each column-pair fully before merging into one list.
+- Endorsements.FreeTextEndorsements: only populate with genuinely bespoke, 
+  policyholder-specific endorsement text — not the standard Excess or 
+  Adjustments boilerplate, which belong in their own dedicated fields below.
+- Endorsements.ExcessTerms / AdjustmentsClause: extract even when these are 
+  printed under the "Endorsements" heading rather than their own heading — 
+  set PresentAsEndorsement to true in that case.
+- StatementOfFact.UnderinsuranceAverageClause: extract this clause verbatim 
+  wherever it appears (commonly on a "Statement of Fact" page) — it directly 
+  affects claim payment amounts and must not be paraphrased.
+- StatementOfFact.ChangesInCircumstancesObligation: extract this even if a 
+  similarly-worded Adjustments clause also exists under Endorsements — treat 
+  them as two separate fields sourced from two separate locations.
+- StatementOfFact.YesAnswerDisclosureDetails vs. ClaimsDisclosedByPolicyholder: 
+  these are two DIFFERENT free-text boxes even though both may be blank in a 
+  given document — do not merge them or infer one from the other.
+- StatementOfFact.DeclarationQuestions: extract every Yes/No question exactly 
+  as printed, in the order they appear, with its answer as a boolean.
 
 Return only the JSON object. Do not include any text before or after it.
