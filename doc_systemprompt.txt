@@ -69,6 +69,19 @@ ACCURACY AND CAUTION
 - If handwritten signature or date is present but illegible, set 
   SignaturePresent to true (if a mark is visibly present) and SignatureDate 
   to null if the date text itself cannot be confidently read.
+- The Itemised Valuables table is often printed with two Description/Value 
+  column-pairs side by side on the page (four columns total: Description, 
+  Value, Description, Value). Read each column-pair independently, top to 
+  bottom, then combine both into a single Items list — do not pair a 
+  Description from the left block with a Value from the right block.
+- The threshold rule printed immediately above or below the Itemised 
+  Valuables table (e.g. "over £1,500 in value...") is a schema field in its 
+  own right (ThresholdRules) — extract it even when the table itself is 
+  empty, as it is required for claims validation regardless of whether any 
+  items are listed.
+- Do not infer ItemCategory or LinkedExcessBand unless it can be reasonably 
+  determined from the item description text itself (e.g. "diamond ring" → 
+  Jewellery). If ambiguous, set to null rather than guessing.
 
 You will be given the exact JSON schema and field-by-field instructions in the 
 user prompt for each request. Follow that schema exactly, using the rules 
