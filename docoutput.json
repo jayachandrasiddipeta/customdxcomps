@@ -1,92 +1,143 @@
 {
   "PolicySchedule": {
     "DocumentMetadata": {
-      "DocumentType": "string — e.g. 'Schedule of Insurance'",
-      "FormReference": "string — e.g. TRIKHSCH_10/2024",
-      "InsuranceProvider": "string — brand shown on schedule, e.g. Trinity",
-      "PageCount": "integer"
+      "DocumentType": "string",
+      "FormReference": "string",
+      "InsuranceProvider": "string",
+      "PageCount": "integer",
+      "ExtractionWarning": "string or null"
+    },
+    "CoverageScope": {
+      "ScopeStatementText": "string — verbatim note defining who/what is covered, typically printed under the document title",
+      "AppliesToSections": "string — e.g. 'One to Seven'"
     },
     "PolicyHolder": {
       "InsuredName": "string",
       "InsuredAddressLine1": "string",
-      "InsuredAddressLine2": "string",
+      "InsuredAddressLine2": "string or null",
       "InsuredCity": "string",
       "InsuredCounty": "string",
       "InsuredPostcode": "string"
     },
     "InsurerDetails": {
-      "PrimaryInsurer": "string — underwriter for Sections One–Seven",
-      "PrimaryInsurerSectionsCovered": "string — e.g. 'One to Seven'",
-      "SecondaryInsurer": "string — underwriter for Section Eight",
-      "SecondaryInsurerSectionsCovered": "string — e.g. 'Eight'"
+      "PrimaryInsurer": "string",
+      "PrimaryInsurerSectionsCovered": "string",
+      "SecondaryInsurer": "string or null",
+      "SecondaryInsurerSectionsCovered": "string or null"
     },
     "PolicyIdentifiers": {
       "CertificateOfInsuranceNumber": "string",
       "MembershipNumber": "string"
     },
     "PolicyPeriod": {
-      "PeriodStartDate": "date (DD-MM-YYYY)",
-      "PeriodEndDate": "date (DD-MM-YYYY)",
-      "IsActiveOnLossDate": "boolean — derived, not extracted directly; requires loss date input"
+      "PeriodStartDate": "string, as written in document",
+      "PeriodEndDate": "string, as written in document"
     },
     "PremiumDetails": {
-      "MonthlyPremiumAmount": "decimal",
-      "Currency": "string — default GBP",
-      "AdministrationFeeMultiSection": "decimal",
-      "AdministrationFeeSingleSection": "decimal",
-      "LegalExpensesFee": "decimal",
-      "IPTRatePercent": "decimal"
+      "MonthlyPremiumAmount": "number",
+      "Currency": "string",
+      "AdministrationFeeMultiSection": "number or null",
+      "AdministrationFeeSingleSection": "number or null",
+      "LegalExpensesFee": "number or null",
+      "IPTRatePercent": "number or null"
     },
     "CoverSections": [
       {
-        "SectionNumber": "string — One, Two, Three...",
-        "SectionDescription": "string — e.g. 'Military Service and Personally Purchased Uniform, Equipment and Kit'",
-        "SubLimitDescription": "string — e.g. 'Temporary Issued Military Service Uniform, Equipment and Kit', nullable",
-        "LimitAmount": "decimal",
-        "Currency": "string"
+        "SectionNumber": "string — e.g. 'One'",
+        "LineItems": [
+          {
+            "ItemDescription": "string",
+            "LimitDisplayValue": "string — exactly as printed, e.g. '£3000', 'Included'",
+            "LimitAmount": "number or null — null if LimitType is not a monetary figure",
+            "LimitType": "string — one of: 'MonetaryLimit', 'Included', 'NotOptedIn'",
+            "Currency": "string"
+          }
+        ]
       }
     ],
-    "ItemisedValuables": [
-      {
-        "ItemDescription": "string",
-        "ItemValue": "decimal",
-        "ThresholdFlag": "string — indicates >£1,500 general or >£500 mobile phone rule applied"
-      }
-    ],
+    "ItemisedValuables": {
+      "ThresholdRules": {
+        "GeneralItemThreshold": "number",
+        "MobilePhoneThreshold": "number",
+        "ThresholdRuleText": "string, verbatim"
+      },
+      "TableIsPopulated": "boolean",
+      "Items": [
+        {
+          "ItemDescription": "string",
+          "ItemValue": "number",
+          "ItemCategory": "string or null — e.g. 'Jewellery', 'Watch', 'Mobile Phone', 'Other'",
+          "ExceedsApplicableThreshold": "boolean",
+          "LinkedExcessBand": "string or null"
+        }
+      ]
+    },
     "ContentsLocation": {
       "ContentsAddressSameAsInsured": "boolean",
-      "AlternateContentsAddress": "string, nullable"
+      "AlternateContentsAddress": "string or null",
+      "ContentsLocationNoteText": "string — verbatim note, e.g. 'Contents are insured at the address shown above unless otherwise agreed.'"
     },
-    "ExcessStructure": {
-      "StandardExcess": "decimal",
-      "MobilePhoneExcess": "decimal",
-      "JewelleryWatchExcessBands": [
+    "Endorsements": {
+      "HasEndorsements": "boolean",
+      "FreeTextEndorsements": [
         {
-          "ValueRangeLow": "decimal",
-          "ValueRangeHigh": "decimal",
-          "ExcessAmount": "decimal"
+          "EndorsementTitle": "string or null",
+          "EndorsementText": "string",
+          "EndorsementCode": "string or null"
         }
       ],
-      "ContentsInStorageStandardExcess": "decimal",
-      "ContentsInStorageAccidentalDamageExcess": "decimal",
-      "ExcessVariesByCircumstanceNote": "boolean — flag that schedule may override standard excess"
-    },
-    "Endorsements": [
-      {
-        "EndorsementText": "string, nullable — none present in this document"
+      "ExcessTerms": {
+        "PresentAsEndorsement": "boolean",
+        "IntroText": "string — verbatim intro sentence(s) explaining what excess is",
+        "StandardExcess": "number or null",
+        "MobilePhoneExcess": "number or null",
+        "JewelleryWatchExcessBands": [
+          {
+            "ValueRangeLow": "number",
+            "ValueRangeHigh": "number",
+            "ExcessAmount": "number"
+          }
+        ],
+        "ContentsInStorageStandardExcess": "number or null",
+        "ContentsInStorageAccidentalDamageExcess": "number or null",
+        "ExcessVariabilityNote": "string or null"
+      },
+      "AdjustmentsClause": {
+        "PresentAsEndorsement": "boolean",
+        "AdjustmentsText": "string or null",
+        "TriggerEventsListed": ["string"]
       }
-    ],
+    },
     "DeclarationAndSignature": {
       "SignaturePresent": "boolean",
-      "SignatureDate": "date"
+      "SignatureDate": "string or null"
     },
     "StatementOfFact": {
-      "PreviousInsuranceDeclinedCancelledOrSpecialTerms": "boolean",
-      "UnspentCriminalConvictionsOrPendingCharges": "boolean",
-      "BankruptcyOrPendingCCJ": "boolean",
-      "PriorClaimsLossesLiabilitiesLast3Years": "boolean",
-      "DisclosedClaimDetails": "string, nullable",
-      "ChangeInCircumstancesAcknowledged": "boolean"
+      "UnderinsuranceAverageClause": {
+        "ClausePresent": "boolean",
+        "ClauseText": "string — verbatim, describes reduced claim payment if sum insured is inadequate ('average')"
+      },
+      "DeclarationQuestions": [
+        {
+          "QuestionText": "string, verbatim",
+          "Answer": "boolean or null"
+        }
+      ],
+      "YesAnswerDisclosureDetails": "string or null — free text from 'Where you have answered yes, details are shown below' box",
+      "ChangesInCircumstancesObligation": {
+        "ObligationText": "string, verbatim",
+        "TriggerEventsListed": ["string"]
+      },
+      "FraudPreventionNotice": {
+        "NoticePresent": "boolean",
+        "DataSharingWithAuthoritiesDisclosed": "boolean",
+        "FraudDatabaseCheckDisclosed": "boolean"
+      },
+      "ClaimsHistoryDisclosureRequirement": {
+        "RequirementText": "string, verbatim — obligation to disclose insurance-related incidents",
+        "DatabaseSearchAtRenewalOrClaimDisclosed": "boolean"
+      },
+      "ClaimsDisclosedByPolicyholder": "string or null — free text from 'Claims that you have disclosed' box"
     }
   }
 }
