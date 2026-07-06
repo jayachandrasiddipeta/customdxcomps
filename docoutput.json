@@ -1,0 +1,92 @@
+{
+  "PolicySchedule": {
+    "DocumentMetadata": {
+      "DocumentType": "string — e.g. 'Schedule of Insurance'",
+      "FormReference": "string — e.g. TRIKHSCH_10/2024",
+      "InsuranceProvider": "string — brand shown on schedule, e.g. Trinity",
+      "PageCount": "integer"
+    },
+    "PolicyHolder": {
+      "InsuredName": "string",
+      "InsuredAddressLine1": "string",
+      "InsuredAddressLine2": "string",
+      "InsuredCity": "string",
+      "InsuredCounty": "string",
+      "InsuredPostcode": "string"
+    },
+    "InsurerDetails": {
+      "PrimaryInsurer": "string — underwriter for Sections One–Seven",
+      "PrimaryInsurerSectionsCovered": "string — e.g. 'One to Seven'",
+      "SecondaryInsurer": "string — underwriter for Section Eight",
+      "SecondaryInsurerSectionsCovered": "string — e.g. 'Eight'"
+    },
+    "PolicyIdentifiers": {
+      "CertificateOfInsuranceNumber": "string",
+      "MembershipNumber": "string"
+    },
+    "PolicyPeriod": {
+      "PeriodStartDate": "date (DD-MM-YYYY)",
+      "PeriodEndDate": "date (DD-MM-YYYY)",
+      "IsActiveOnLossDate": "boolean — derived, not extracted directly; requires loss date input"
+    },
+    "PremiumDetails": {
+      "MonthlyPremiumAmount": "decimal",
+      "Currency": "string — default GBP",
+      "AdministrationFeeMultiSection": "decimal",
+      "AdministrationFeeSingleSection": "decimal",
+      "LegalExpensesFee": "decimal",
+      "IPTRatePercent": "decimal"
+    },
+    "CoverSections": [
+      {
+        "SectionNumber": "string — One, Two, Three...",
+        "SectionDescription": "string — e.g. 'Military Service and Personally Purchased Uniform, Equipment and Kit'",
+        "SubLimitDescription": "string — e.g. 'Temporary Issued Military Service Uniform, Equipment and Kit', nullable",
+        "LimitAmount": "decimal",
+        "Currency": "string"
+      }
+    ],
+    "ItemisedValuables": [
+      {
+        "ItemDescription": "string",
+        "ItemValue": "decimal",
+        "ThresholdFlag": "string — indicates >£1,500 general or >£500 mobile phone rule applied"
+      }
+    ],
+    "ContentsLocation": {
+      "ContentsAddressSameAsInsured": "boolean",
+      "AlternateContentsAddress": "string, nullable"
+    },
+    "ExcessStructure": {
+      "StandardExcess": "decimal",
+      "MobilePhoneExcess": "decimal",
+      "JewelleryWatchExcessBands": [
+        {
+          "ValueRangeLow": "decimal",
+          "ValueRangeHigh": "decimal",
+          "ExcessAmount": "decimal"
+        }
+      ],
+      "ContentsInStorageStandardExcess": "decimal",
+      "ContentsInStorageAccidentalDamageExcess": "decimal",
+      "ExcessVariesByCircumstanceNote": "boolean — flag that schedule may override standard excess"
+    },
+    "Endorsements": [
+      {
+        "EndorsementText": "string, nullable — none present in this document"
+      }
+    ],
+    "DeclarationAndSignature": {
+      "SignaturePresent": "boolean",
+      "SignatureDate": "date"
+    },
+    "StatementOfFact": {
+      "PreviousInsuranceDeclinedCancelledOrSpecialTerms": "boolean",
+      "UnspentCriminalConvictionsOrPendingCharges": "boolean",
+      "BankruptcyOrPendingCCJ": "boolean",
+      "PriorClaimsLossesLiabilitiesLast3Years": "boolean",
+      "DisclosedClaimDetails": "string, nullable",
+      "ChangeInCircumstancesAcknowledged": "boolean"
+    }
+  }
+}
