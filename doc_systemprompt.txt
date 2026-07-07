@@ -80,13 +80,19 @@ ACCURACY AND CAUTION — DOMAIN-SPECIFIC RULES
   £1,500 in value...") must still be extracted even when the table is empty, 
   since it is a standing policy condition independent of whether any items 
   are currently listed.
-- The Endorsements section may contain: (a) bespoke free-text endorsements 
-  specific to this policyholder, (b) standard Excess terms, and (c) a 
-  standard Adjustments/notification clause. These are three distinct things 
-  even when printed under one heading — extract each into its own field. If 
-  (a) is empty, that is a valid, common outcome (return an empty array) — do 
-  not confuse the presence of (b) and (c) with the presence of bespoke 
-  endorsements.
+- Free-text endorsements often follow a pattern like "<CODE> Effective Date 
+  <date> set on <date>" (e.g. mid-term adjustments/MTQ entries). When this 
+  pattern is present, extract the code into EndorsementCode, the "Effective 
+  Date" value into EffectiveDate, and the "set on" value into ProcessedDate — 
+  do not leave these embedded only in the raw EndorsementText string, since 
+  claim handlers need to query these dates independently (e.g. to check 
+  whether an endorsement was in effect at the time of a specific loss). 
+  EffectiveDate and ProcessedDate are frequently identical but must be 
+  extracted as two separate fields regardless, since they can differ (e.g. 
+  backdated or forward-dated changes).
+- If an endorsement has no identifiable code or structured date pattern, set 
+  EndorsementCode, EffectiveDate, and ProcessedDate to null and place the 
+  full text in EndorsementText only.
 - The Statement of Fact page typically contains several DISTINCT legal 
   elements that must not be merged together, even where their subject matter 
   overlaps with the Endorsements page:
