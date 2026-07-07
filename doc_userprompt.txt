@@ -27,6 +27,10 @@ FIELD-SPECIFIC INSTRUCTIONS:
 - Endorsements.ExcessTerms / AdjustmentsClause: extract even when these are 
   printed under the "Endorsements" heading rather than their own heading — 
   set PresentAsEndorsement to true in that case.
+- Endorsements.FreeTextEndorsements[].EffectiveDate / ProcessedDate: parse 
+  out of the endorsement text wherever a recognizable "Effective Date ..." 
+  and/or "set on ..." pattern appears. Keep the date format exactly as 
+  printed (e.g. DD/MM/YYYY) — do not reformat or infer a different one.
 - StatementOfFact.UnderinsuranceAverageClause: extract this clause verbatim 
   wherever it appears (commonly on a "Statement of Fact" page) — it directly 
   affects claim payment amounts and must not be paraphrased.
