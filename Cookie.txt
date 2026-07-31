@@ -1,0 +1,14 @@
+Please add the following script to UAT site, on all pages:
+<!-- OneTrust Cookies Consent Notice start for uat-trinity.tmhcc.com -->
+
+<script type="text/javascript" src=https://cdn.cookielaw.org/consent/019fa4b0-c665-7157-a9be-7c7a75abe3d2/OtAutoBlock.js ></script>
+<script src=https://cdn.cookielaw.org/scripttemplates/otSDKStub.js  type="text/javascript" charset="UTF-8" data-domain-script="019fa4b0-c665-7157-a9be-7c7a75abe3d2" ></script>
+<script type="text/javascript">
+function OptanonWrapper() { }
+</script>
+<!-- OneTrust Cookies Consent Notice end for uat-trinity.tmhcc.com -->
+
+Cookie page script:
+<!-- OneTrust Cookies List start -->
+<div id="ot-sdk-cookie-policy">&nbsp;</div>
+<!-- OneTrust Cookies List end -->
