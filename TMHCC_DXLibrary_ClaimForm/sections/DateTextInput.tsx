@@ -1,7 +1,9 @@
+import { DateInput } from '@pega/cosmos-react-core';
 import type { LocalizationMap } from '../utils/useLocalization';
 import {
   formatDateForDisplay,
   getDateFormat,
+  getDateFormatPlaceholder,
   toIsoDate
 } from '../utils/dateUtils';
 
@@ -18,8 +20,10 @@ interface DateTextInputProps {
 }
 
 /**
- * Native date picker only (no typed entry). Browser value is yyyy-MM-dd;
- * form state is kept in the localization-driven display format (DateFormat).
+ * Cosmos DateInput (segmented day/month/year controls + calendar picker) instead of
+ * a native <input type="date">, since native date inputs ignore custom placeholder
+ * text and always show the browser's own locale-based hint. Form state stays in the
+ * localization-driven display format (DateFormat); Cosmos gets/returns plain ISO dates.
  */
 function DateTextInput({
   value,
@@ -31,23 +35,24 @@ function DateTextInput({
   ...aria
 }: DateTextInputProps) {
   const format = getDateFormat(l);
-  const isoValue = toIsoDate(value, format) || '';
+  const isoValue = toIsoDate(value, format) || undefined;
+  const isRequired = aria['aria-required'] === true || aria['aria-required'] === 'true';
+  const isInvalid = aria['aria-invalid'] === true || aria['aria-invalid'] === 'true';
 
   return (
-    <input
+    <DateInput
       id={id}
-      type='date'
-      value={isoValue}
       className={className}
-      onChange={e => {
-        const iso = e.target.value;
-        onChange(iso ? formatDateForDisplay(iso, format) : '');
+      value={isoValue}
+      info={getDateFormatPlaceholder(l)}
+      required={isRequired}
+      status={isInvalid ? 'error' : undefined}
+      aria-describedby={aria['aria-describedby']}
+      onChange={({ valueAsISOString }) => {
+        const isoDate = valueAsISOString ? valueAsISOString.slice(0, 10) : '';
+        onChange(isoDate ? formatDateForDisplay(isoDate, format) : '');
       }}
-      onBlur={onBlur}
-      onKeyDown={e => e.preventDefault()}
-      onPaste={e => e.preventDefault()}
-      onDrop={e => e.preventDefault()}
-      {...aria}
+      onBlur={onBlur ? () => onBlur() : undefined}
     />
   );
 }
