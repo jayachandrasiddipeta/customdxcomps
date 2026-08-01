@@ -293,6 +293,21 @@ export const baseFormStyles = css`
     font-weight: 400;
   }
 
+  /* Cosmos DateInput (.pega-date-input) renders day/month/year as separate
+     native <input>s. The generic field rule above would stretch and border
+     each one individually, so hand sizing/border/focus back to Cosmos's own
+     per-segment layout instead of fighting it. */
+  .claim-form__field .pega-date-input input {
+    width: auto;
+    border: 0;
+    padding: 0;
+    background: transparent;
+  }
+
+  .claim-form__field .pega-date-input input:focus {
+    box-shadow: none;
+  }
+
   .claim-form__phone-group {
     display: flex;
     gap: 4px;
