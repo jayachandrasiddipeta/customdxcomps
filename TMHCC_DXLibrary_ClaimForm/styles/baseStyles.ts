@@ -725,74 +725,54 @@ export const baseFormStyles = css`
   /* ── HTML-content banner (MessageBanner) ──
      Cosmos's own Banner only ever renders its messages as escaped plain
      text, so HTML-formatted Pega messages (validation/error rules) are
-     routed through this instead, styled to sit alongside the plain banner. */
+     routed through this instead. Colors below are pulled directly from
+     Cosmos's own theme tokens (components.banner.*, base.palette.border-line,
+     components.card.background) so this matches the OOTB Banner look. */
   .claim-form__html-banner {
     display: flex;
-    align-items: flex-start;
-    gap: 0.6rem;
+    align-items: stretch;
     box-sizing: border-box;
-    padding: 0.75rem 0.9rem;
-    border-radius: 8px;
+    border: 1px solid #cfcfcf;
+    border-radius: 0.5rem;
+    overflow: hidden;
     font-size: 0.8rem;
   }
 
-  .claim-form__html-banner svg {
+  .claim-form__html-banner-icon {
     flex-shrink: 0;
-    margin-top: 0.1rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0.75rem 0.5rem;
+    color: #ffffff;
+  }
+
+  .claim-form__html-banner-icon--urgent {
+    background: #d91c29;
+  }
+
+  .claim-form__html-banner-icon--warning {
+    background: #fd6000;
+  }
+
+  .claim-form__html-banner-icon--success {
+    background: #20aa50;
+  }
+
+  .claim-form__html-banner-icon--info {
+    background: #8397ab;
+  }
+
+  .claim-form__html-banner-icon--ai {
+    background: #681fc3;
   }
 
   .claim-form__html-banner-content {
+    flex: 1;
     min-width: 0;
-  }
-
-  .claim-form__html-banner--urgent {
-    border: 1px solid #fecaca;
-    background: #fef2f2;
-    color: #991b1b;
-  }
-
-  .claim-form__html-banner--urgent svg {
-    color: #dc2626;
-  }
-
-  .claim-form__html-banner--warning {
-    border: 1px solid #fde68a;
-    background: #fffbeb;
-    color: #92400e;
-  }
-
-  .claim-form__html-banner--warning svg {
-    color: #d97706;
-  }
-
-  .claim-form__html-banner--success {
-    border: 1px solid #bbf7d0;
-    background: #f0fdf4;
-    color: #166534;
-  }
-
-  .claim-form__html-banner--success svg {
-    color: #16a34a;
-  }
-
-  .claim-form__html-banner--info {
-    border: 1px solid #bfdbfe;
-    background: #eff6ff;
-    color: #1e3a5f;
-  }
-
-  .claim-form__html-banner--info svg {
-    color: #1a3d6b;
-  }
-
-  .claim-form__html-banner--ai {
-    border: 1px solid #e9d5ff;
-    background: #faf5ff;
-    color: #6b21a8;
-  }
-
-  .claim-form__html-banner--ai svg {
-    color: #9333ea;
+    padding: 0.75rem 0.9rem;
+    background: #ffffff;
+    color: #001b3d;
   }
 
   /* ── Review screen ── */
