@@ -12,3 +12,22 @@ Cookie page script:
 <!-- OneTrust Cookies List start -->
 <div id="ot-sdk-cookie-policy">&nbsp;</div>
 <!-- OneTrust Cookies List end -->
+
+
+
+{
+    "errorClassification": "Resource not found",
+    "localizedValue": "The resource cannot be found.",
+    "errorDetails": [
+        {
+            "message": "Error_File_Not_Found",
+            "erroneousInputOutputFieldInPage": "",
+            "erroneousInputOutputIdentifier": "",
+            "errorClassification": "",
+            "localizedValue": "Couldn't find attachment with ID : 5604bc5a-5ceb-4e44-a78e-5b0ab3c3190dTesting.",
+            "messageParameters": [
+                "5604bc5a-5ceb-4e44-a78e-5b0ab3c3190dTesting"
+            ]
+        }
+    ]
+}
