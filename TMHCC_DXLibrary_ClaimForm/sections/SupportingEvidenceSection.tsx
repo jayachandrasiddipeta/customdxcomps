@@ -1,8 +1,9 @@
 import { useState, type ChangeEvent, type DragEvent } from 'react';
 
 import type { ClaimFormData, UploadedAttachment } from '../types';
-import { Banner, Icon, Progress } from '@pega/cosmos-react-core';
+import { Icon, Progress } from '@pega/cosmos-react-core';
 import InfoIcon from './InfoIcon';
+import MessageBanner from './MessageBanner';
 import type { ListOption } from '../utils/listValuesUtils';
 import type { LocalizationMap } from '../utils/useLocalization';
 
@@ -74,7 +75,7 @@ function SupportingEvidenceSection({
   return (
     <section className='claim-form__section'>
       {uploadError && (
-        <Banner className='claim-form__banner-gap' variant='urgent' messages={[uploadError]} />
+        <MessageBanner className='claim-form__banner-gap' variant='urgent' message={uploadError} />
       )}
 
       <h3 className='claim-form__section-title claim-form__title-with-icon'>
