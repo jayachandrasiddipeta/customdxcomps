@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Banner } from '@pega/cosmos-react-core';
 import { LocalizationMap } from '../utils/useLocalization';
 import { isSafeUrl } from '../utils/urlUtils';
+import MessageBanner from './MessageBanner';
 
 interface ClaimConfirmationViewProps {
   caseId: string;
@@ -71,7 +71,7 @@ function ClaimConfirmationView({ caseId, confirmationDataPageName, onClose,l, at
       <div className='claim-confirmation'>
 
         {attachmentWarning && (
-          <Banner className='claim-form__banner-gap' variant='warning' messages={[attachmentWarning]} />
+          <MessageBanner className='claim-form__banner-gap' variant='warning' message={attachmentWarning} />
         )}
 
         {!loading && confirmationHtml && (
