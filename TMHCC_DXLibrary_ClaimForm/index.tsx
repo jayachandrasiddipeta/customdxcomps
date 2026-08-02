@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import {
-  Banner,
   Icon,
   Progress,
   registerIcon,
@@ -28,6 +27,7 @@ import type { PConnFieldProps } from '../shared/PConnProps';
 import ClaimConfirmationView from './sections/ClaimConfirmationView';
 import DiscardChangesModal from './sections/DiscardChangesModal';
 import ItemsAffectedSection from './sections/ItemsAffectedSection';
+import MessageBanner from './sections/MessageBanner';
 import ReviewSection from './sections/ReviewSection';
 import SupportingEvidenceSection from './sections/SupportingEvidenceSection';
 import WhatHappenedSection from './sections/WhatHappenedSection';
@@ -726,7 +726,7 @@ function TmhccDxLibraryClaimForm(props: TmhccDxLibraryClaimFormProps) {
         return (
           <>
             {configLoadError && (
-              <Banner className='claim-form__banner-gap' variant='urgent' messages={[String(l['ErrConfigLoadFailed'])]} />
+              <MessageBanner className='claim-form__banner-gap' variant='urgent' message={String(l['ErrConfigLoadFailed'])} />
             )}
             <YourDetailsSection
               formData={formData}
@@ -839,7 +839,7 @@ function TmhccDxLibraryClaimForm(props: TmhccDxLibraryClaimFormProps) {
             {renderStepNav()}
             <div className='claim-form' ref={stepContentRef} tabIndex={-1}>
               {submitError && (
-                <Banner className='claim-form__banner-gap' variant='urgent' messages={[submitError]} />
+                <MessageBanner className='claim-form__banner-gap' variant='urgent' message={submitError} />
               )}
               {renderCurrentSection()}
             </div>
