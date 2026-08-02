@@ -296,12 +296,22 @@ export const baseFormStyles = css`
   /* Cosmos DateInput (.pega-date-input) renders day/month/year as separate
      native <input>s. The generic field rule above would stretch and border
      each one individually, so hand sizing/border/focus back to Cosmos's own
-     per-segment layout instead of fighting it. */
+     per-segment layout instead of fighting it. Width is keyed off maxlength
+     (not the HTML size attribute, which browsers resolve inconsistently for
+     type="number") so day/month/year are each exactly as wide as their
+     digits, with no leftover space from an oversized box. */
   .claim-form__field .pega-date-input input {
-    width: auto;
     border: 0;
     padding: 0;
     background: transparent;
+  }
+
+  .claim-form__field .pega-date-input input[maxlength='2'] {
+    width: 2ch;
+  }
+
+  .claim-form__field .pega-date-input input[maxlength='4'] {
+    width: 4ch;
   }
 
   .claim-form__field .pega-date-input input:focus {
@@ -710,6 +720,79 @@ export const baseFormStyles = css`
 
   .claim-form__banner-gap {
     margin-bottom: 1rem;
+  }
+
+  /* ── HTML-content banner (MessageBanner) ──
+     Cosmos's own Banner only ever renders its messages as escaped plain
+     text, so HTML-formatted Pega messages (validation/error rules) are
+     routed through this instead, styled to sit alongside the plain banner. */
+  .claim-form__html-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    box-sizing: border-box;
+    padding: 0.75rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+  }
+
+  .claim-form__html-banner svg {
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .claim-form__html-banner-content {
+    min-width: 0;
+  }
+
+  .claim-form__html-banner--urgent {
+    border: 1px solid #fecaca;
+    background: #fef2f2;
+    color: #991b1b;
+  }
+
+  .claim-form__html-banner--urgent svg {
+    color: #dc2626;
+  }
+
+  .claim-form__html-banner--warning {
+    border: 1px solid #fde68a;
+    background: #fffbeb;
+    color: #92400e;
+  }
+
+  .claim-form__html-banner--warning svg {
+    color: #d97706;
+  }
+
+  .claim-form__html-banner--success {
+    border: 1px solid #bbf7d0;
+    background: #f0fdf4;
+    color: #166534;
+  }
+
+  .claim-form__html-banner--success svg {
+    color: #16a34a;
+  }
+
+  .claim-form__html-banner--info {
+    border: 1px solid #bfdbfe;
+    background: #eff6ff;
+    color: #1e3a5f;
+  }
+
+  .claim-form__html-banner--info svg {
+    color: #1a3d6b;
+  }
+
+  .claim-form__html-banner--ai {
+    border: 1px solid #e9d5ff;
+    background: #faf5ff;
+    color: #6b21a8;
+  }
+
+  .claim-form__html-banner--ai svg {
+    color: #9333ea;
   }
 
   /* ── Review screen ── */
