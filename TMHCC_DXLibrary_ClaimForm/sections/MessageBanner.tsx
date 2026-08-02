@@ -30,8 +30,10 @@ function MessageBanner({ variant, message, className }: MessageBannerProps) {
   }
 
   return (
-    <div className={`claim-form__html-banner claim-form__html-banner--${variant} ${className ?? ''}`}>
-      <Icon name={VARIANT_ICON[variant]} />
+    <div className={`claim-form__html-banner ${className ?? ''}`}>
+      <div className={`claim-form__html-banner-icon claim-form__html-banner-icon--${variant}`}>
+        <Icon name={VARIANT_ICON[variant]} />
+      </div>
       <HTML className='claim-form__html-banner-content' content={message} />
     </div>
   );
