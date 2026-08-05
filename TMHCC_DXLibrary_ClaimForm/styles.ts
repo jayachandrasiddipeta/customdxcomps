@@ -94,6 +94,19 @@ export const ClaimFormGlobalStyles = createGlobalStyle`
   .claim-form__discard-modal .claim-form__button--secondary:hover:not(:disabled) {
     background: #f0f4fa !important;
   }
+
+  .claim-form__policy-modal-box {
+    width: 50vw !important;
+    max-width: calc(100% - 2rem) !important;
+    min-width: 320px !important;
+  }
+
+  .claim-form__policy-modal-frame {
+    display: block;
+    width: 100%;
+    height: 75vh;
+    border: none;
+  }
 `;
 
 export default styled.div`
