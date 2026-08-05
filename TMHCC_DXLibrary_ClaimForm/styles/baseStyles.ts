@@ -1890,4 +1890,33 @@ export const baseFormStyles = css`
   font-weight: 800;   /* ✅ extra bold */
 }
 /* ✅ Support hours */
+
+/* ✅ Privacy Policy / Web Cookie Policy links — below the support-hours line */
+.claim-form__image-policy-links {
+  display: flex;
+  gap: 32px;
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+.claim-form__image-policy-link {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #84c2ea;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.claim-form__image-policy-link:hover {
+  color: #ffffff;
+}
+
+.claim-form__image-policy-link:focus-visible {
+  outline: 2px solid #84c2ea;
+  outline-offset: 2px;
+}
 `;
