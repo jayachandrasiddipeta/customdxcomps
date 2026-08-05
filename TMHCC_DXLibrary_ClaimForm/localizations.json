@@ -1,5 +1,14 @@
 {
   "fields": {
+    "DocumentContentDataPageName": "D_DocumentContent",
+    "DocumentContentDataPageName": "D_DocumentContent",
+    "DocumentContentParamName": "ContentName",
+    "PrivacyPolicyContentName": "PrivacyPolicy",
+    "PrivacyPolicyLinkLabel2": "Privacy Policy",
+    "WebCookiePolicyContentName": "WebCookiePolicy",
+    "WebCookiePolicyLinkLabel": "Web Cookie Policy",
+    "PolicyDocumentLoading": "Loading document…",
+    "ErrPolicyDocumentLoadFailed": "Unable to load the document. Please try again later."
     "ErrConfigLoadFailed": "We couldn't load some configuration for this form. Please contact your administrator for assistance.",
     "ErrCaseCreationFailed": "Failed to create claim case.",
     "ErrCreateClaimApiPathMissing": "Create claim API path is not configured.",
