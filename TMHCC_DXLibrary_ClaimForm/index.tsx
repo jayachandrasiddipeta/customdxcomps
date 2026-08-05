@@ -26,6 +26,7 @@ import type { PConnFieldProps } from '../shared/PConnProps';
 
 import ClaimConfirmationView from './sections/ClaimConfirmationView';
 import DiscardChangesModal from './sections/DiscardChangesModal';
+import PolicyDocumentModal from './sections/PolicyDocumentModal';
 import ItemsAffectedSection from './sections/ItemsAffectedSection';
 import MessageBanner from './sections/MessageBanner';
 import ReviewSection from './sections/ReviewSection';
@@ -60,6 +61,7 @@ import { usePortalMask } from './utils/usePortalMask';
 import { isSafeUrl } from './utils/urlUtils';
 import { getDateFormat, normalizeDisplayDate } from './utils/dateUtils';
 import { initializeOneTrustConsent } from './utils/oneTrustUtils';
+import { fetchPolicyDocumentBase64 } from './utils/policyDocumentUtils';
 
 registerIcon(check);
 registerIcon(information);
@@ -576,6 +578,24 @@ function TmhccDxLibraryClaimForm(props: TmhccDxLibraryClaimFormProps) {
       { dismissible: true }
     );
   };
+
+  const handleViewPolicyDocument = async (contentName: string, title: string) => {
+    const modal = create(
+      PolicyDocumentModal,
+      { title, base64Content: null, hasError: false, l },
+      { dismissible: true }
+    );
+    try {
+      const base64Content = await fetchPolicyDocumentBase64(
+        String(l['DocumentContentDataPageName']),
+        String(l['DocumentContentParamName']),
+        contentName
+      );
+      modal.update(base64Content ? { base64Content } : { hasError: true });
+    } catch {
+      modal.update({ hasError: true });
+    }
+  };
   const stepDefinitions: Array<{ label: string; name: string }> = [
     { label: l['Step 1'], name: l['Your Details'] },
     { label: l['Step 2'], name: l['What Happened'] },
@@ -617,6 +637,23 @@ function TmhccDxLibraryClaimForm(props: TmhccDxLibraryClaimFormProps) {
         <div className='claim-form__image-hours'>
           <strong>{l['HelpSupportHoursKey']}</strong>
           <span>{l['HelpSupportHoursValue']}</span>
+        </div>
+
+        <div className='claim-form__image-policy-links'>
+          <button
+            type='button'
+            className='claim-form__image-policy-link'
+            onClick={() => handleViewPolicyDocument(String(l['PrivacyPolicyContentName']), String(l['PrivacyPolicyLinkLabel']))}
+          >
+            {l['PrivacyPolicyLinkLabel']}
+          </button>
+          <button
+            type='button'
+            className='claim-form__image-policy-link'
+            onClick={() => handleViewPolicyDocument(String(l['WebCookiePolicyContentName']), String(l['WebCookiePolicyLinkLabel']))}
+          >
+            {l['WebCookiePolicyLinkLabel']}
+          </button>
         </div>
       </div>
     </div>
