@@ -20,6 +20,12 @@ export const todayIso = (): string => {
   return `${now.getFullYear()}-${pad2(now.getMonth() + 1)}-${pad2(now.getDate())}`;
 };
 
+/** Today's date, `years` years back, as yyyy-MM-dd. */
+export const yearsAgoIso = (years: number): string => {
+  const [year, month, day] = todayIso().split('-');
+  return `${Number(year) - years}-${month}-${day}`;
+};
+
 const isValidYmd = (year: number, month: number, day: number): boolean => {
   if (year < 1000 || year > 9999 || month < 1 || month > 12 || day < 1 || day > 31) return false;
   const dt = new Date(year, month - 1, day);
@@ -106,6 +112,21 @@ export const isFutureDate = (value: string, format: string = DEFAULT_DATE_FORMAT
   const iso = toIsoDate(value, format);
   if (!iso) return false;
   return iso > todayIso();
+};
+
+/** Whether a birth date (display or ISO form) is at least `years` old as of today. */
+export const isAtLeastAge = (
+  value: string,
+  years: number,
+  format: string = DEFAULT_DATE_FORMAT
+): boolean => {
+  const iso = toIsoDate(value, format);
+  if (!iso) return false;
+  const [birthYear, birthMonth, birthDay] = iso.split('-').map(Number);
+  const [todayYear, todayMonth, todayDay] = todayIso().split('-').map(Number);
+  const hadBirthdayThisYear = todayMonth > birthMonth || (todayMonth === birthMonth && todayDay >= birthDay);
+  const age = todayYear - birthYear - (hadBirthdayThisYear ? 0 : 1);
+  return age >= years;
 };
 
 /**
