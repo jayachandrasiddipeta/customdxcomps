@@ -4,6 +4,7 @@ import type { ClaimItem } from '../types';
 import {
   compareDates,
   getDateFormat,
+  isAtLeastAge,
   isFutureDate,
   isValidDisplayDate
 } from './dateUtils';
@@ -78,14 +79,9 @@ const emailValidator = (l: LocalizationMap, emailRx: RegExp): FieldValidator =>
     return emailRx.test(v) ? '' : String(l['ErrEmailInvalid']);
   };
 
-// Strict UK-style format (leading 0, fixed length) is only meaningful for a UK phone
-// number — other countries have their own numbering plans, so only presence is checked.
-const isUKPhone = (fd: ClaimFormData) => fd.policyCountry === 'GB';
-
 const phoneValidator = (l: LocalizationMap, phoneRx: RegExp, phoneLen: number | string): FieldValidator =>
-  (v, fd) => {
+  (v) => {
     if (!v) return String(l['ErrPhoneRequired']);
-    if (!isUKPhone(fd)) return '';
     return phoneRx.test(v) ? '' : String(l['ErrPhoneFormat']).replace('{1}', String(phoneLen));
   };
 
@@ -201,20 +197,18 @@ const conditionalPhone = (
   (v, fd) => {
     if (!isApplicable(fd)) return '';
     if (!v) return String(l['ErrPhoneRequired']);
-    if (!isUKPhone(fd)) return '';
     return phoneRx.test(v) ? '' : String(l['ErrPhoneFormat']).replace('{1}', String(phoneLen));
   };
 
-// Spouse/Dependent phone numbers aren't required, but if one is entered on a UK policy
-// it must still match the same format as the main Phone Number field.
+// Spouse/Dependent phone numbers aren't required, but if one is entered it must
+// still match the same format as the main Phone Number field.
 const optionalPhoneFormat = (
   l: LocalizationMap,
   phoneRx: RegExp,
   phoneLen: number | string
 ): FieldValidator =>
-  (v, fd) => {
+  (v) => {
     if (!v) return '';
-    if (!isUKPhone(fd)) return '';
     return phoneRx.test(v) ? '' : String(l['ErrPhoneFormat']).replace('{1}', String(phoneLen));
   };
 
@@ -232,7 +226,8 @@ const dependentDateOfBirthValidator = (l: LocalizationMap): FieldValidator =>
     if (!v) return String(l['ErrDateOfBirthRequired']);
     const format = getDateFormat(l);
     if (!isValidDisplayDate(v, format)) return dateFormatError(l);
-    return isFutureDate(v, format) ? String(l['ErrDateOfBirthFuture']) : '';
+    if (isFutureDate(v, format)) return String(l['ErrDateOfBirthFuture']);
+    return isAtLeastAge(v, 18, format) ? '' : String(l['ErrDependentDateOfBirthUnder18']);
   };
 
 const isSpouse = (fd: ClaimFormData) => fd.relationship === 'SP';
