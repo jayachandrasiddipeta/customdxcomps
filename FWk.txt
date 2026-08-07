@@ -1,0 +1,22 @@
+Claim Station Layer Cake
+------------------------
+
+CSWebExt (Claim Station External for End User portal) -> CS (Claim Station for Claim Handler Portal) -> Constellation and HCCUnAutenticated (Contains the Anonymous Authentication setup) apps
+
+If in case any future cover holders are to be onboarded,
+
+1. If they want anonymous webportal, they will have their own CSWebExt_XX which will have built on as CSWebExt
+2. If they only want claim handler portal, they will have built on as CS (Claim station) and implement anything specific in their layer
+
+
+Web Form Setup
+-------------------
+
+Pega BROWSER requestor type has HCC:Unauthenticated access group setup. And we have the WebLDAP1 authentication service created for anonymous access in the same ruleset. ClaimsCustomAuthentication is the activity name which setsup the Guest operator context "CSGuestUser" which has CS:EndUser access group pointed CSWebExt application. We implemented a decision table "DetermineCSGuestUser" as an extension point for future to decide the operator context based on certain conditions.
+
+The anonymous Webform landing page is displayed using application name CSWebExt. This application has built on application as CS (Claim Station). We maintain only the EndUserPortal rule (Self service portal), landing page to show the webform to end user through anonymous authentication service (PRWebLDAP1). This application is not gaurded by OKTA. But the built on CS application is guarded with OKTA.
+
+We have masked the header and Operator icon on the self service portal in the webform component to get a look and feel of customer facing web page. We have created a TMHCC_DXLibrary_ClaimForm custom DX Layout Template component in react and published to Pega to be used in the landing page.
+
+All the field labels, dropdown sources, images, placeholder texts, banner messages, validation error messages, validation regex string, data page names referred in the webform component are sourced from pega using the localization feature. All the localized content resides in localization bundle rule (can't be edited) that can be altered uing the overrides type of localization rule from CSWebExt application rule. If you want to add new or update existing key/values pairs w.r.t webform component, then you have to switch to CSWebExt (Claim Station External) application. Unlock the latest version of CSWebExt ruleset. Then save as the AdditionaLabels (overrides localization rule) into ruleset version. Update the key/value under the DX component key (TMHCC_DXLibrary_ClaimForm) and save and checking. Come back to application rule and click on the Generate Base Bundle button at the bottom of the rule. Ensure that the AdditionaLabels localization rule is present in the text box above the button. The new key/values which you updated in overrides rule will be pushed to main bundle rule. Save the application and lock the ruleset version. Do not perform this operation ibeing in any other application and not at all with branch context. Only being in CSWebExt application and with open ruleset version.
+
