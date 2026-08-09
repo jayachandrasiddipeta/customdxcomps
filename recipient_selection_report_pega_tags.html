@@ -1,0 +1,325 @@
+<!--
+  ============================================================================
+  Recipient Selection Report - HTML rule for HTMLToPDF activity
+  Uses Pega OOTB HTML rule tags: pega:reference, pega:each, pega:if,
+  pega:image, pega:include
+  ============================================================================
+  NOTES ON THE TAGS BELOW - adjust to match your actual class structure:
+
+  - <pega:reference name="..."/>  -> property paths are written relative to
+    whatever page is in scope. Adjust ".DonorHospital" etc. to your real
+    property names (e.g. ".pyID", ".Donor.HospitalName").
+
+  - <pega:each name=".Recipients" iterationkey="Recipient"> -> replace
+    ".Recipients" with your actual page-list property (e.g.
+    ".pyWorkPage.RecipientList"). Inside the loop, reference fields as
+    "Recipient.FieldName" if that's how your iterationkey resolves scope,
+    or drop the prefix if pega:each puts you directly in recipient context
+    in your version - check against another working pega:each block in
+    this ruleset since exact scoping behavior can vary slightly by
+    Pega release.
+
+  - <pega:if test="..."> -> the test expression syntax (operators like
+    notblank(), or direct boolean property refs like ".IsUrgent") should
+    match whatever your ruleset's function library/expression style
+    already uses elsewhere in this application - swap if different.
+
+  - <pega:image name="..."/> -> point this at your Rule-Image / binary
+    file rule holding the hospital logo (e.g. name="OUSLogo"). This tag
+    renders the correct <img> + stream URL for you - don't hand-write
+    an <img src="..."> for OOTB-managed images.
+
+  - <pega:include name="..."/> -> use this if you want to pull the header
+    block (logo + title + meta) out into its own reusable HTML rule so
+    other reports in this application can share it. Shown as a commented
+    alternative near the header section below.
+
+  PAGE NUMBERS
+  Still handled via CSS Paged Media (@page + counter(page)/counter(pages)),
+  which is independent of the Pega tags above - this part doesn't change.
+  ============================================================================
+-->
+<html>
+<head>
+<meta charset="UTF-8" />
+<style type="text/css">
+
+  @page {
+    size: A4;
+    margin: 60px 40px 70px 40px;
+    @bottom-center {
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: Arial, sans-serif;
+      font-size: 9px;
+      color: #8a8a8a;
+    }
+  }
+
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #262626;
+    font-size: 11px;
+    margin: 0;
+    padding: 0;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .report-header-table {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .report-header-table td {
+    vertical-align: middle;
+  }
+  .logo-cell img {
+    max-height: 40px;
+  }
+  .meta-block {
+    text-align: right;
+    font-size: 10px;
+    color: #262626;
+    line-height: 1.5em;
+  }
+  .meta-block .label {
+    font-weight: bold;
+  }
+  .report-divider {
+    border: none;
+    border-top: 2px solid #1F3864;
+    margin: 6px 0 14px 0;
+  }
+  .report-title {
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+    color: #1F3864;
+    margin: 0 0 20px 0;
+  }
+
+  .section-heading {
+    font-size: 13px;
+    font-weight: bold;
+    color: #1F3864;
+    border-bottom: 1px solid #D9D9D9;
+    padding-bottom: 4px;
+    margin: 18px 0 10px 0;
+  }
+
+  .field-table {
+    width: 100%;
+    margin-bottom: 4px;
+  }
+  .field-table td {
+    vertical-align: top;
+    padding: 4px 10px 10px 0;
+    width: 25%;
+  }
+  .field-label {
+    display: block;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: #8a8a8a;
+    margin-bottom: 2px;
+  }
+  .field-value {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    color: #262626;
+  }
+
+  .recipient-card {
+    border: 1px solid #D9D9D9;
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    page-break-inside: avoid;
+  }
+  .recipient-card-header {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  .recipient-card-header td {
+    vertical-align: middle;
+  }
+  .recipient-index {
+    font-size: 9px;
+    text-transform: uppercase;
+    color: #8a8a8a;
+    letter-spacing: 0.04em;
+  }
+  .recipient-name {
+    font-size: 14px;
+    font-weight: bold;
+    color: #1F3864;
+  }
+  .score-badge {
+    display: inline-block;
+    min-width: 40px;
+    text-align: center;
+    padding: 6px 14px;
+    border-radius: 4px;
+    background-color: #E2EFDA;
+    color: #1F5C2E;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .score-caption {
+    display: block;
+    font-size: 8px;
+    text-transform: uppercase;
+    color: #8a8a8a;
+    text-align: center;
+    margin-top: 2px;
+  }
+
+  .urgent-flag {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    font-size: 9px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #A32D2D;
+    background-color: #FCEBEB;
+    border-radius: 3px;
+  }
+
+  .comments-block {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px dashed #E0E0E0;
+  }
+  .comments-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    color: #8a8a8a;
+    margin-bottom: 2px;
+  }
+  .comments-text {
+    font-size: 11px;
+    color: #262626;
+  }
+
+</style>
+</head>
+<body>
+
+  <!-- ================= REPORT HEADER ================= -->
+  <!--
+    Alternative: pull this whole header block into its own HTML rule,
+    e.g. "ReportHeader", and replace everything between the
+    report-header-table and report-title div with a single line:
+      <pega:include name="ReportHeader" />
+    Useful if multiple reports in this app share the same header/logo.
+  -->
+  <table class="report-header-table">
+    <tr>
+      <td class="logo-cell" style="width:60%;">
+        <pega:image name="OUSLogo" />
+      </td>
+      <td class="meta-block">
+        <span class="label">Created DateTime :</span> <pega:reference name=".pxCreateDateTime" /><br/>
+        <span class="label">Created By :</span> <pega:reference name=".pxCreateOperator" />
+      </td>
+    </tr>
+  </table>
+  <hr class="report-divider" />
+
+  <div class="report-title">Recipient Selection Report</div>
+
+  <!-- ================= DONOR DETAILS ================= -->
+  <div class="section-heading">Donor details</div>
+  <table class="field-table">
+    <tr>
+      <td><span class="field-label">Donor ID</span><span class="field-value"><pega:reference name=".Donor.DonorID" /></span></td>
+      <td colspan="3"><span class="field-label">Hospital</span><span class="field-value"><pega:reference name=".Donor.Hospital" /></span></td>
+    </tr>
+    <tr>
+      <td><span class="field-label">Gender</span><span class="field-value"><pega:reference name=".Donor.Gender" /></span></td>
+      <td><span class="field-label">Age</span><span class="field-value"><pega:reference name=".Donor.Age" /></span></td>
+      <td><span class="field-label">ABO</span><span class="field-value"><pega:reference name=".Donor.ABO" /></span></td>
+      <td><span class="field-label">Height</span><span class="field-value"><pega:reference name=".Donor.Height" /></span></td>
+    </tr>
+    <tr>
+      <td><span class="field-label">Weight</span><span class="field-value"><pega:reference name=".Donor.Weight" /></span></td>
+      <td><span class="field-label">CMV</span><span class="field-value"><pega:reference name=".Donor.CMV" /></span></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </table>
+
+  <!-- ================= RECIPIENTS ================= -->
+  <div class="section-heading">Matched recipients</div>
+
+  <pega:each name=".Recipients" iterationkey="Recipient">
+
+    <div class="recipient-card">
+
+      <table class="recipient-card-header">
+        <tr>
+          <td style="width:70px;">
+            <div class="score-badge"><pega:reference name="Recipient.Score" /></div>
+            <span class="score-caption">Score</span>
+          </td>
+          <td style="padding-left:14px;">
+            <span class="recipient-index">Recipient <pega:reference name="@Recipient.pxCurrentIndex" /></span><br/>
+            <span class="recipient-name"><pega:reference name="Recipient.Name" /></span>
+            <pega:if test="Recipient.IsUrgent">
+              <span class="urgent-flag">Urgent</span>
+            </pega:if>
+          </td>
+        </tr>
+      </table>
+
+      <table class="field-table">
+        <tr>
+          <td><span class="field-label">ID</span><span class="field-value"><pega:reference name="Recipient.ID" /></span></td>
+          <td><span class="field-label">Scandia</span><span class="field-value"><pega:reference name="Recipient.Scandia" /></span></td>
+          <td><span class="field-label">ABO</span><span class="field-value"><pega:reference name="Recipient.ABO" /></span></td>
+          <td><span class="field-label">H</span><span class="field-value"><pega:reference name="Recipient.Height" /></span></td>
+        </tr>
+        <tr>
+          <td><span class="field-label">Age</span><span class="field-value"><pega:reference name="Recipient.Age" /></span></td>
+          <td><span class="field-label">Time on waiting list</span><span class="field-value"><pega:reference name="Recipient.TimeOnWaitingList" /></span></td>
+          <td><span class="field-label">V</span><span class="field-value"><pega:reference name="Recipient.V" /></span></td>
+          <td><span class="field-label">ReTx</span><span class="field-value"><pega:reference name="Recipient.ReTx" /></span></td>
+        </tr>
+        <tr>
+          <td><span class="field-label">CMV</span><span class="field-value"><pega:reference name="Recipient.CMV" /></span></td>
+          <td><span class="field-label">Total MM sum</span><span class="field-value"><pega:reference name="Recipient.TotalMMSum" /></span></td>
+          <td><span class="field-label">DSA</span><span class="field-value"><pega:reference name="Recipient.DSA" /></span></td>
+          <td><span class="field-label">MFI</span><span class="field-value"><pega:reference name="Recipient.MFI" /></span></td>
+        </tr>
+        <tr>
+          <td><span class="field-label">PRA</span><span class="field-value"><pega:reference name="Recipient.PRA" /></span></td>
+          <td><span class="field-label">Dialyse</span><span class="field-value"><pega:reference name="Recipient.Dialyse" /></span></td>
+          <td colspan="2"><span class="field-label">Hospital</span><span class="field-value"><pega:reference name="Recipient.Hospital" /></span></td>
+        </tr>
+      </table>
+
+      <pega:if test="notblank(Recipient.SurgeonComments)">
+        <div class="comments-block">
+          <div class="comments-label">Surgeon comments</div>
+          <div class="comments-text"><pega:reference name="Recipient.SurgeonComments" /></div>
+        </div>
+      </pega:if>
+
+      <pega:if test="notblank(Recipient.Kommentar)">
+        <div class="comments-block">
+          <div class="comments-label">Kommentar</div>
+          <div class="comments-text"><pega:reference name="Recipient.Kommentar" /></div>
+        </div>
+      </pega:if>
+
+    </div>
+
+  </pega:each>
+
+</body>
+</html>
