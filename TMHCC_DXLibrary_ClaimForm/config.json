@@ -1,0 +1,64 @@
+{
+    "name": "TMHCC_DXLibrary_ClaimForm",
+    "label": "Claim Form Widget",
+    "description": "Claim Form Widget",
+    "organization": "TMHCC",
+    "version": "1.0.0-dev",
+    "library": "DXLibrary",
+    "componentKey": "TMHCC_DXLibrary_ClaimForm",
+    "type": "Template",
+    "subtype": [
+        "PAGE",
+        "CASE"
+    ],
+    "subtypeLabel": "PAGE and CASE",
+    "icon": "OneColumnPage.svg",
+    "properties": [
+        {
+            "name": "caseTypeID",
+            "label": "Claim case type ID",
+            "format": "TEXT"
+        },
+        {
+            "name": "createClaimApiPath",
+            "label": "Create claim REST API path",
+            "format": "TEXT"
+        },
+        {
+            "format": "LABEL",
+            "label": "Conditions",
+            "name": "ConditionsLabel",
+            "variant": "h3"
+        },
+        {
+            "label": "Conditions",
+            "format": "GROUP",
+            "properties": [
+                {
+                    "name": "visibility",
+                    "label": "Visibility",
+                    "format": "VISIBILITY"
+                }
+            ]
+        },
+        {
+            "format": "LABEL",
+            "label": "About",
+            "name": "PegaAboutLabel",
+            "variant": "h3"
+        },
+        {
+            "format": "LABEL",
+            "label": "TMHCC_DXLibrary 1.0.0, Mon Jul 13 2026, 25.1.2-397",
+            "name": "PegaAboutData",
+            "variant": "primary"
+        }
+    ],
+    "defaultConfig": {
+        "caseTypeID": "TMH-MCS-Work-MilitaryKitClaim",
+        "createClaimApiPath": "/api/application/v2/cases"
+    },
+    "buildDate": "2026-07-13T18:42:14.566Z",
+    "infinityVersion": "25.1.2-397",
+    "packageCosmosVersion": "8.21.3"
+}
