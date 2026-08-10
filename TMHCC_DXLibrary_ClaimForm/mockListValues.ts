@@ -318,46 +318,53 @@ export const LOV_DATA: LovItem[] = [
             "pyRowNumber": "5"
         },
         {
-            "pyActualValue": "Military Service Uniform, Equipment and Personally Purchased Kit",
+            "pyActualValue": "Kit",
             "pyCategory": "ItemCoverType",
             "pyKeyString": "MEP",
-            "pyRowNumber": "1"
+            "pyRowNumber": "1",
+            "SupportingText" : "MK,PPK,OTH"
         },
         {
             "pyActualValue": "Valuables and Personal Possessions",
             "pyCategory": "ItemCoverType",
             "pyKeyString": "VPP",
-            "pyRowNumber": "2"
+            "pyRowNumber": "2",
+            "SupportingText" : "BAL,EL,FTW,JEW,MP,OPE,TOE,VAL,WAT,OTH"
         },
         {
             "pyActualValue": "Contents",
             "pyCategory": "ItemCoverType",
             "pyKeyString": "CON",
-            "pyRowNumber": "3"
+            "pyRowNumber": "3",
+            "SupportingText" : "BAL,CL,EL,FTW,FU,JEW,OPE,TOO,TOE,VAL,WAT,OTH"
         },
         {
             "pyActualValue": "Personal Liability",
             "pyCategory": "ItemCoverType",
             "pyKeyString": "PEL",
-            "pyRowNumber": "4"
+            "pyRowNumber": "4",
+            "SupportingText" : "OTH"
         },
         {
             "pyActualValue": "Money and Credit Card Cover",
             "pyCategory": "ItemCoverType",
             "pyKeyString": "MCCC",
-            "pyRowNumber": "5"
+            "pyRowNumber": "5",
+            "SupportingText" : "CASH,CC,MC,OTH"
         },
         {
             "pyActualValue": "Pedal Cycles",
             "pyCategory": "ItemCoverType",
             "pyKeyString": "PECY",
-            "pyRowNumber": "6"
+            "pyRowNumber": "6",
+            "SupportingText" : "CE,OTH"
         },
         {
             "pyActualValue": "Licence to Occupy",
             "pyCategory": "ItemCoverType",
             "pyKeyString": "LTO",
-            "pyRowNumber": "7"
+            "pyRowNumber": "7",
+            "SupportingText" : "OTH"
         }
     ];
 
