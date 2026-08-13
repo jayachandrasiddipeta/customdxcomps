@@ -1,0 +1,169 @@
+{
+    "name": "Novitates_NTDXComponents_SmartBanner",
+    "label": "Smart Banner",
+    "description": "Smart Banner",
+    "organization": "Novitates",
+    "version": "0.0.1",
+    "library": "NTDXComponents",
+    "componentKey": "Novitates_NTDXComponents_SmartBanner",
+    "type": "Widget",
+    "subtype": [
+        "PAGE",
+        "CASE"
+    ],
+    "subtypeLabel": "PAGE and CASE",
+    "icon": "OneColumnPage.svg",
+    "properties": [
+        {
+            "name": "variant",
+            "label": "variant",
+            "format": "SELECT",
+            "defaultValue": "success",
+            "source": [
+                {
+                    "key": "success",
+                    "value": "success"
+                },
+                {
+                    "key": "info",
+                    "value": "info"
+                },
+                {
+                    "key": "warning",
+                    "value": "warning"
+                },
+                {
+                    "key": "urgent",
+                    "value": "urgent"
+                }
+            ]
+        },
+        {
+            "name": "dataPage",
+            "label": "Data Page name to get the messages",
+            "format": "TEXT"
+        },
+        {
+            "name": "headingText",
+            "label": "Heading text",
+            "format": "TEXT",
+            "description": "Custom heading shown above the banner messages. Leave empty to use the default heading per variant."
+        },
+        {
+            "name": "headingTag",
+            "label": "Heading tag",
+            "format": "SELECT",
+            "defaultValue": "h2",
+            "description": "HTML heading level for accessibility (h1–h6).",
+            "source": [
+                {
+                    "key": "h1",
+                    "value": "h1"
+                },
+                {
+                    "key": "h2",
+                    "value": "h2"
+                },
+                {
+                    "key": "h3",
+                    "value": "h3"
+                },
+                {
+                    "key": "h4",
+                    "value": "h4"
+                },
+                {
+                    "key": "h5",
+                    "value": "h5"
+                },
+                {
+                    "key": "h6",
+                    "value": "h6"
+                }
+            ]
+        },
+        {
+            "name": "icon",
+            "label": "Icon",
+            "format": "SELECT",
+            "defaultValue": "warn-solid",
+            "description": "OOTB Cosmos icon shown beside the heading. Banner's own status icon (fixed per variant) is unaffected — leave unset to render the banner exactly as before.",
+            "source": [
+                {
+                    "key": "warn-solid",
+                    "value": "warn-solid"
+                },
+                {
+                    "key": "flag-wave-solid",
+                    "value": "flag-wave-solid"
+                },
+                {
+                    "key": "check",
+                    "value": "check"
+                },
+                {
+                    "key": "information-solid",
+                    "value": "information-solid"
+                }
+            ]
+        },
+        {
+            "name": "dismissible",
+            "label": "Is the banner dismissible",
+            "format": "BOOLEAN",
+            "defaultValue": false
+        },
+        {
+            "name": "dismissAction",
+            "label": "Case Wide Action ID to dismiss the banner",
+            "format": "TEXT"
+        },
+        {
+            "name": "defaultExpanded",
+            "label": "Load banner expanded by default",
+            "format": "BOOLEAN",
+            "defaultValue": true,
+            "description": "When enabled, the banner will always load expanded regardless of message count. When disabled, it follows OOTB behavior (expanded for 1-2 messages, collapsed for 3+ messages). Ignored when 'Allow expand/collapse' is disabled."
+        },
+        {
+            "name": "allowCollapse",
+            "label": "Allow expand/collapse",
+            "format": "BOOLEAN",
+            "defaultValue": true,
+            "description": "When disabled, the expand/collapse toggle is hidden and the banner is always forced fully expanded."
+        },
+        {
+            "name": "showCount",
+            "label": "Show message count",
+            "format": "BOOLEAN",
+            "defaultValue": true,
+            "description": "When disabled, hides the message-count badge shown next to the heading."
+        },
+        {
+            "label": "Conditions",
+            "format": "GROUP",
+            "properties": [
+                {
+                    "name": "visibility",
+                    "label": "Visibility",
+                    "format": "VISIBILITY"
+                }
+            ]
+        },
+        {
+            "format": "LABEL",
+            "label": "About",
+            "name": "PegaAboutLabel",
+            "variant": "h3"
+        },
+        {
+            "format": "LABEL",
+            "label": "Novitates_NTDXComponents 0.0.1, Tue Aug 11 2026, 26.1.0-103357",
+            "name": "PegaAboutData",
+            "variant": "primary"
+        }
+    ],
+    "buildDate": "2026-08-11T09:30:53.123Z",
+    "infinityVersion": "26.1.0-103357",
+    "packageCosmosVersion": "8.8.0"
+}
