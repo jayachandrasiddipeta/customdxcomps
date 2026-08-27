@@ -59,9 +59,12 @@ export async function fetchAttachmentContent(
 
 // Data pages commonly wrap base64 content with line breaks (RFC 2045 style) or an
 // accidental "data:...;base64," prefix; strip both before decoding.
+function sanitizeBase64(base64Content: string): string {
+  return base64Content.replace(/^data:[^,]*,/, '').replace(/\s/g, '');
+}
+
 function decodeBase64ToBuffer(base64Content: string): ArrayBuffer {
-  const cleaned = base64Content.replace(/^data:[^,]*,/, '').replace(/\s/g, '');
-  const byteString = atob(cleaned);
+  const byteString = atob(sanitizeBase64(base64Content));
   const buffer = new ArrayBuffer(byteString.length);
   const bytes = new Uint8Array(buffer);
   for (let i = 0; i < byteString.length; i += 1) {
@@ -73,6 +76,12 @@ function decodeBase64ToBuffer(base64Content: string): ArrayBuffer {
 export function createAttachmentBlobUrl(base64Content: string, mimeType: string): string {
   const blob = new Blob([decodeBase64ToBuffer(base64Content)], { type: mimeType || 'application/octet-stream' });
   return URL.createObjectURL(blob);
+}
+
+// blob: object URLs render inconsistently for inline PDF preview in iframes across
+// non-Chromium browsers (Safari/Firefox); a data: URI is honored much more reliably.
+export function createAttachmentDataUrl(base64Content: string, mimeType: string): string {
+  return `data:${mimeType || 'application/octet-stream'};base64,${sanitizeBase64(base64Content)}`;
 }
 
 export function downloadBase64File(base64Content: string, mimeType: string, fileName: string) {
