@@ -1,0 +1,23 @@
+Here's the case for the modular, class-hierarchy-based architecture (shared base + case-type-specific extensions) over a single flat layer with everything — case types, configurations, portals, personas, access groups — crammed together:
+
+**1. Change isolation.** A fix or enhancement to intake, SLA logic, or the communication log in the shared layer propagates to all four processes automatically. In a single-layer design, you'd be hunting through conditional logic scattered across one giant case type to make the same fix everywhere, with real risk of missing a spot.
+
+**2. Blast radius control.** When sanctions logic changes, non-sanctions, COI, and whistleblowing configurations are untouched and don't need re-testing. In one shared layer, any change is a change to everything — you can't touch the sanctions flow without regression-testing whistleblowing too.
+
+**3. Confidentiality by design, not by conditionals.** Whistleblowing and COI need restricted, need-to-know visibility; sanctions and query cases don't. With separate case types, you set access at the class/case-type level — clean and auditable. In one layer, you're building nested if/else access rules inside a single case type, which is exactly the kind of logic that leaks sensitive data through a missed condition.
+
+**4. Linear complexity growth, not exponential.** Adding a fifth process (say, Gifts & Entertainment) means extending the base case type — a bounded, predictable effort. In a single layer, every new process adds another branch to shared flows, shared data pages, and shared access logic, and the interactions between branches multiply with each addition.
+
+**5. Independent release cycles.** The whistleblowing team can ship a change to their investigation stage without coordinating a release with the sanctions team, because they're separate case types. In one layer, everyone shares a deployment unit, so any team's change requires sign-off/testing from every other team touching that layer.
+
+**6. Team ownership and accountability.** Compliance, HR/Ethics, and Sanctions teams can each own configuration for their case type without stepping on each other's rules. A single layer forces shared ownership of one configuration set, which tends to produce either bottlenecks or accidental overwrites.
+
+**7. Cleaner reporting and analytics.** Case-type-level separation means volume, SLA, and outcome reporting per process is a straightforward query against that case type. In a flattened model, every report needs filtering logic to separate processes that were never truly separated in the data.
+
+**8. Targeted AI tuning.** Email classification and extraction prompts/models can be tuned per case type (sanctions extraction looks very different from whistleblowing narrative analysis). A single-layer, single-configuration approach pushes you toward one generic AI model trying to serve very different intents, which degrades accuracy for all of them.
+
+**9. Regulatory and retention flexibility.** Sanctions cases may need different audit/retention rules (e.g., OFAC-driven) than whistleblowing (e.g., confidentiality-driven) or COI (e.g., HR-policy-driven). Modular case types let each carry its own retention/audit configuration natively; a single layer requires overlaying multiple regulatory regimes onto one data/audit model, increasing compliance risk.
+
+**10. Works with the platform instead of against it.** Pega's class hierarchy and inheritance (the "situational layer cake") is built exactly for this — specialize behavior while reusing a common ancestor. A single-layer, config-flag-driven approach fights the platform's native reuse model and typically ends up as a maintenance burden that's harder to explain to a new Pega developer than the reasoning behind it saved in the first place.
+
+**The trade-off to be upfront about:** the modular approach does mean slightly more upfront design work (defining the shared base class cleanly) and a bit more governance overhead to keep the shared layer disciplined. But that cost is paid once, while the single-layer approach pays a growing tax on every future change, audit, and onboarding.
