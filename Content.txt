@@ -18,3 +18,29 @@ Licence End Date - cannot be in past or today. should be greater than Licence St
 message 1: Licence End Date must be after the Licence Start Date.
 
 If the dates are manually entered and not completely entered then show messages "Enter a valid Licence Start Date in DD/MM/YYYY format." and  "Enter a valid Licence End Date in DD/MM/YYYY format." respectively
+
+----------------------------------------------------------
+
+
+Description free text field validations - Minimum 20 characters, maximum 500 characters. Allow letters, numbers, spaces and standard punctuation.
+
+Validation Messages
+Enter at least 20 characters describing the circumstances of your claim.
+Enter no more than 500 characters.
+Enter a valid description using letters, numbers and standard punctuation.
+
+
+
+Atleast one checkbox should be selected from Why you were unable to use the property field options  (Message: Please select why you were unable to use the property.)
+Atleast one checkbox should be selected from Imact on the property field options (Message: Please select the impact on the property.
+
+
+Monthly Licece Fee : 
+
+Minimum value is £0.01. Zero and negative values must not be accepted.(Message: Monthly Licence Fee must be at least £0.01)
+No more than two decimal places are permitted (Message: Enter the Monthly Licence Fee using no more than two decimal places)
+
+Amount you are claiming:
+
+Minimum value is £0.01. Zero and negative values must not be accepted.(Message: Amount you are claiming must be at least £0.01)
+No more than two decimal places are permitted (Message: Enter the amount using no more than two decimal places.)
