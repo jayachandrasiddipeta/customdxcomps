@@ -1,0 +1,529 @@
+{
+	"data": [
+		{
+			"pyCategory": "AffectedType",
+			"SupportingText": null,
+			"pyKeyString": "PE",
+			"pyActualValue": "Person",
+			"pyRowNumber": 1
+		},
+		{
+			"pyCategory": "AffectedType",
+			"SupportingText": null,
+			"pyKeyString": "PR",
+			"pyActualValue": "Property",
+			"pyRowNumber": 2
+		},
+		{
+			"pyCategory": "AffectedType",
+			"SupportingText": null,
+			"pyKeyString": "VE",
+			"pyActualValue": "Vehicle",
+			"pyRowNumber": 3
+		},
+		{
+			"pyCategory": "AffectedType",
+			"SupportingText": null,
+			"pyKeyString": "AN",
+			"pyActualValue": "Animal",
+			"pyRowNumber": 4
+		},
+		{
+			"pyCategory": "AffectedType",
+			"SupportingText": null,
+			"pyKeyString": "OTH",
+			"pyActualValue": "Other",
+			"pyRowNumber": 5
+		},
+		{
+			"pyCategory": "EvidenceType",
+			"SupportingText": null,
+			"pyKeyString": "ProofOfPurchase",
+			"pyActualValue": "Proof of Purchase",
+			"pyRowNumber": 1
+		},
+		{
+			"pyCategory": "EvidenceType",
+			"SupportingText": null,
+			"pyKeyString": "EvidenceOfOwnership",
+			"pyActualValue": "Proof of Ownership",
+			"pyRowNumber": 2
+		},
+		{
+			"pyCategory": "EvidenceType",
+			"SupportingText": null,
+			"pyKeyString": "PhotographOfItem",
+			"pyActualValue": "Photograph of Item",
+			"pyRowNumber": 3
+		},
+		{
+			"pyCategory": "EvidenceType",
+			"SupportingText": null,
+			"pyKeyString": "ImageOfDamagedItem",
+			"pyActualValue": "Photograph of Damage",
+			"pyRowNumber": 4
+		},
+		{
+			"pyCategory": "EvidenceType",
+			"SupportingText": null,
+			"pyKeyString": "RepairEstimateOrQuote",
+			"pyActualValue": "Repair Estimate or Quote",
+			"pyRowNumber": 5
+		},
+		{
+			"pyCategory": "EvidenceType",
+			"SupportingText": null,
+			"pyKeyString": "RepairInvoice",
+			"pyActualValue": "Repair Invoice",
+			"pyRowNumber": 6
+		},
+		{
+			"pyCategory": "EvidenceType",
+			"SupportingText": null,
+			"pyKeyString": "PoliceCrimeReferenceReport",
+			"pyActualValue": "Police Report or Crime Reference",
+			"pyRowNumber": 7
+		},
+		{
+			"pyCategory": "EvidenceType",
+			"SupportingText": null,
+			"pyKeyString": "BankCardProviderEvidence",
+			"pyActualValue": "Bank or Card Provider Evidence",
+			"pyRowNumber": 8
+		},
+		{
+			"pyCategory": "EvidenceType",
+			"SupportingText": null,
+			"pyKeyString": "IncidentReport",
+			"pyActualValue": "Incident Report",
+			"pyRowNumber": 9
+		},
+		{
+			"pyCategory": "EvidenceType",
+			"SupportingText": null,
+			"pyKeyString": "MilitaryDocumentation",
+			"pyActualValue": "Military Documentation",
+			"pyRowNumber": 10
+		},
+		{
+			"pyCategory": "EvidenceType",
+			"SupportingText": null,
+			"pyKeyString": "TraningExaminationReport",
+			"pyActualValue": "Training or Examination Receipt",
+			"pyRowNumber": 11
+		},
+		{
+			"pyCategory": "EvidenceType",
+			"SupportingText": null,
+			"pyKeyString": "Other",
+			"pyActualValue": "Other Supporting Document",
+			"pyRowNumber": 12
+		},
+		{
+			"pyCategory": "GenericTrueFalse",
+			"SupportingText": null,
+			"pyKeyString": "true",
+			"pyActualValue": "true",
+			"pyRowNumber": 1
+		},
+		{
+			"pyCategory": "GenericTrueFalse",
+			"SupportingText": null,
+			"pyKeyString": "false",
+			"pyActualValue": "false",
+			"pyRowNumber": 2
+		},
+		{
+			"pyCategory": "GenericYesNo",
+			"SupportingText": null,
+			"pyKeyString": "Yes",
+			"pyActualValue": "Yes",
+			"pyRowNumber": 1
+		},
+		{
+			"pyCategory": "GenericYesNo",
+			"SupportingText": null,
+			"pyKeyString": "No",
+			"pyActualValue": "No",
+			"pyRowNumber": 2
+		},
+		{
+			"pyCategory": "ItemCoverType",
+			"SupportingText": "MK,PPK,OTH",
+			"pyKeyString": "MEP",
+			"pyActualValue": "Kit",
+			"pyRowNumber": 1
+		},
+		{
+			"pyCategory": "ItemCoverType",
+			"SupportingText": "BAL,EL,FTW,JEW,MP,OPE,OTH,TOE,VAL,WAT",
+			"pyKeyString": "VPP",
+			"pyActualValue": "Valuables and Personal Possessions",
+			"pyRowNumber": 2
+		},
+		{
+			"pyCategory": "ItemCoverType",
+			"SupportingText": "BAL,CL,EL,FTW,FU,JEW,OPE,OTH,TOOL,TOE,VAL,WAT",
+			"pyKeyString": "CON",
+			"pyActualValue": "Contents",
+			"pyRowNumber": 3
+		},
+		{
+			"pyCategory": "ItemCoverType",
+			"SupportingText": null,
+			"pyKeyString": "PEL",
+			"pyActualValue": "Personal Liability",
+			"pyRowNumber": 4
+		},
+		{
+			"pyCategory": "ItemCoverType",
+			"SupportingText": "CSH,CC,MULC,OTH",
+			"pyKeyString": "MCCC",
+			"pyActualValue": "Money/Credit Card",
+			"pyRowNumber": 5
+		},
+		{
+			"pyCategory": "ItemCoverType",
+			"SupportingText": "CYC,OTH",
+			"pyKeyString": "PECY",
+			"pyActualValue": "Pedal Cycles",
+			"pyRowNumber": 6
+		},
+		{
+			"pyCategory": "ItemCoverType",
+			"SupportingText": null,
+			"pyKeyString": "LTO",
+			"pyActualValue": "Licence to Occupy",
+			"pyRowNumber": 7
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "MK",
+			"pyActualValue": "Kit",
+			"pyRowNumber": 1
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "EL",
+			"pyActualValue": "Electronics",
+			"pyRowNumber": 2
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "PPK",
+			"pyActualValue": "Personally Purchased Kit",
+			"pyRowNumber": 3
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "MP",
+			"pyActualValue": "Mobile Phone",
+			"pyRowNumber": 4
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "JEW",
+			"pyActualValue": "Jewellery",
+			"pyRowNumber": 5
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "VAL",
+			"pyActualValue": "Valuables",
+			"pyRowNumber": 6
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "FU",
+			"pyActualValue": "Furniture / Household Items",
+			"pyRowNumber": 7
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "CSH",
+			"pyActualValue": "Cash",
+			"pyRowNumber": 8
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "CL",
+			"pyActualValue": "Clothing & Uniform",
+			"pyRowNumber": 9
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "FTW",
+			"pyActualValue": "Footwear",
+			"pyRowNumber": 10
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "CC",
+			"pyActualValue": "Credit Card",
+			"pyRowNumber": 11
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "CYC",
+			"pyActualValue": "Cycling Equipment",
+			"pyRowNumber": 12
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "OPE",
+			"pyActualValue": "Optical Equipment",
+			"pyRowNumber": 13
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "WAT",
+			"pyActualValue": "Watches",
+			"pyRowNumber": 14
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "BAL",
+			"pyActualValue": "Bags & Luggage",
+			"pyRowNumber": 15
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "TOE",
+			"pyActualValue": "Tools & Equipment",
+			"pyRowNumber": 16
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "OTH",
+			"pyActualValue": "Other",
+			"pyRowNumber": 17
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "MULC",
+			"pyActualValue": "Multiple Cards",
+			"pyRowNumber": 18
+		},
+		{
+			"pyCategory": "ItemType",
+			"SupportingText": null,
+			"pyKeyString": "TOOL",
+			"pyActualValue": "Tools",
+			"pyRowNumber": 19
+		},
+		{
+			"pyCategory": "LibraStatus",
+			"SupportingText": null,
+			"pyKeyString": "NR",
+			"pyActualValue": "Not Ready for Libra Entry",
+			"pyRowNumber": 1
+		},
+		{
+			"pyCategory": "LibraStatus",
+			"SupportingText": null,
+			"pyKeyString": "PE",
+			"pyActualValue": "Pending Libra Entry",
+			"pyRowNumber": 2
+		},
+		{
+			"pyCategory": "LibraStatus",
+			"SupportingText": null,
+			"pyKeyString": "EL",
+			"pyActualValue": "Entered in Libra",
+			"pyRowNumber": 3
+		},
+		{
+			"pyCategory": "LossLocation",
+			"SupportingText": "On base or at your registered address",
+			"pyKeyString": "PHA",
+			"pyActualValue": "Same as my address",
+			"pyRowNumber": 1
+		},
+		{
+			"pyCategory": "LossLocation",
+			"SupportingText": "Overseas or at a different military location",
+			"pyKeyString": "ODE",
+			"pyActualValue": "On deployment or exercise",
+			"pyRowNumber": 2
+		},
+		{
+			"pyCategory": "LossLocation",
+			"SupportingText": "Enter an address or describe the location",
+			"pyKeyString": "DL",
+			"pyActualValue": "A different location",
+			"pyRowNumber": 3
+		},
+		{
+			"pyCategory": "LossType",
+			"SupportingText": null,
+			"pyKeyString": "TH",
+			"pyActualValue": "Theft",
+			"pyRowNumber": 1
+		},
+		{
+			"pyCategory": "LossType",
+			"SupportingText": null,
+			"pyKeyString": "LO",
+			"pyActualValue": "Loss",
+			"pyRowNumber": 2
+		},
+		{
+			"pyCategory": "LossType",
+			"SupportingText": null,
+			"pyKeyString": "DA",
+			"pyActualValue": "Damage",
+			"pyRowNumber": 3
+		},
+		{
+			"pyCategory": "LossType",
+			"SupportingText": null,
+			"pyKeyString": "FI",
+			"pyActualValue": "Fire",
+			"pyRowNumber": 4
+		},
+		{
+			"pyCategory": "LossType",
+			"SupportingText": null,
+			"pyKeyString": "WD",
+			"pyActualValue": "Water Damage",
+			"pyRowNumber": 5
+		},
+		{
+			"pyCategory": "LossType",
+			"SupportingText": null,
+			"pyKeyString": "DSLA",
+			"pyActualValue": "Damage to my SLA",
+			"pyRowNumber": 6
+		},
+		{
+			"pyCategory": "LossType",
+			"SupportingText": null,
+			"pyKeyString": "DSFA",
+			"pyActualValue": "Damage to my SFA",
+			"pyRowNumber": 7
+		},
+		{
+			"pyCategory": "LossType",
+			"SupportingText": null,
+			"pyKeyString": "OTH",
+			"pyActualValue": "Other",
+			"pyRowNumber": 8
+		},
+		{
+			"pyCategory": "Product",
+			"SupportingText": null,
+			"pyKeyString": "MKCPP",
+			"pyActualValue": "Military Kit Contents and Personal Possessions",
+			"pyRowNumber": 1
+		},
+		{
+			"pyCategory": "PropertyImpactType",
+			"SupportingText": null,
+			"pyKeyString": "PWU",
+			"pyActualValue": "Property was uninhabitable",
+			"pyRowNumber": 1
+		},
+		{
+			"pyCategory": "PropertyImpactType",
+			"SupportingText": null,
+			"pyKeyString": "AWR",
+			"pyActualValue": "Access was restricted",
+			"pyRowNumber": 2
+		},
+		{
+			"pyCategory": "PropertyImpactType",
+			"SupportingText": null,
+			"pyKeyString": "TED",
+			"pyActualValue": "Temporary disruption",
+			"pyRowNumber": 3
+		},
+		{
+			"pyCategory": "PropertyImpactType",
+			"SupportingText": null,
+			"pyKeyString": "OTH",
+			"pyActualValue": "Other",
+			"pyRowNumber": 4
+		},
+		{
+			"pyCategory": "Relationship",
+			"SupportingText": null,
+			"pyKeyString": "PH",
+			"pyActualValue": "Policyholder",
+			"pyRowNumber": 1
+		},
+		{
+			"pyCategory": "Relationship",
+			"SupportingText": null,
+			"pyKeyString": "SP",
+			"pyActualValue": "Spouse",
+			"pyRowNumber": 2
+		},
+		{
+			"pyCategory": "Relationship",
+			"SupportingText": null,
+			"pyKeyString": "DP",
+			"pyActualValue": "Dependent",
+			"pyRowNumber": 3
+		},
+		{
+			"pyCategory": "Relationship",
+			"SupportingText": null,
+			"pyKeyString": "AP",
+			"pyActualValue": "Authorised Person",
+			"pyRowNumber": 4
+		},
+		{
+			"pyCategory": "Relationship",
+			"SupportingText": null,
+			"pyKeyString": "OTH",
+			"pyActualValue": "Other (if applicable)",
+			"pyRowNumber": 5
+		},
+		{
+			"pyCategory": "WhatHappenedType",
+			"SupportingText": null,
+			"pyKeyString": "PD",
+			"pyActualValue": "Property damage",
+			"pyRowNumber": 1
+		},
+		{
+			"pyCategory": "WhatHappenedType",
+			"SupportingText": null,
+			"pyKeyString": "EV",
+			"pyActualValue": "Eviction",
+			"pyRowNumber": 2
+		},
+		{
+			"pyCategory": "WhatHappenedType",
+			"SupportingText": null,
+			"pyKeyString": "LD",
+			"pyActualValue": "Lease dispute",
+			"pyRowNumber": 3
+		},
+		{
+			"pyCategory": "WhatHappenedType",
+			"SupportingText": null,
+			"pyKeyString": "OTH",
+			"pyActualValue": "Other",
+			"pyRowNumber": 4
+		}
+	]
+}
