@@ -1,10 +1,20 @@
-It was indeed a special feeling this time attending the Pega Solution builder session in singapore with Braam, Smith where had a hands-on work to know more about the responsibilities of a solution builder and how to work with blueprint to generate a high-fidelty blueprint and then using the same to generate application in pega.
+Plese make following changes for field validations and messages
 
-Additionally, we got nice presentations on the new features of 26 as well from Alistair and Test Automation with AI assistannt by Jason. There are lotof features bundled in 26 where we have to do lot of work to understand the capabilities and use them in our porjects. Looking forward to explore them more and provide my learnings and opinions to wider community.
 
-Last year november when i attended the blueprint delivered session, i was a unknown to everyone in the room and this year it was a special feeling as Braam shocased/highlighted my contribution towards constellation on the PPT slide. Glad to see that the contributions to the pega community are recognized and celebrated.
+Property Address 
 
-We also got gold coins and goodies for people who asked great/unique/valid questions and it was good to see that the whole day of session did not seem to be tired but everyone left the room learning lot of things and opened doors for yearning to explore more.
+Minimum / maximum characters - Minimum 5 characters, maximum 250 characters. Allow letters, numbers, spaces, apostrophes, hyphens, commas, full stops, forward slashes, ampersands and brackets. Make this regex configurable. Below are the 3 messages to be configured
+message 1: Property Address must be at least 5 characters.
+message 2: Property Address must be 250 characters or less.
+message 3: Property Address can only contain letters, numbers, spaces, apostrophes ('), hyphens (-), commas (,), full stops (.), forward slashes (/), ampersands (&) and brackets ().
 
-Looking forward to attend more session in future
 
+Licence Start Date - Cannot be in future
+
+message 1: Licence Start Date cannot be in the future.
+
+Licence End Date - cannot be in past or today. should be greater than Licence Start Date
+
+message 1: Licence End Date must be after the Licence Start Date.
+
+If the dates are manually entered and not completely entered then show messages "Enter a valid Licence Start Date in DD/MM/YYYY format." and  "Enter a valid Licence End Date in DD/MM/YYYY format." respectively
