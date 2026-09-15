@@ -1,6 +1,7 @@
 import type { ClaimFormData, ClaimFormErrors } from '../types';
 import type { LocalizationMap } from './useLocalization';
 import type { ClaimItem } from '../types';
+import { LIST_CATEGORIES } from './listValuesUtils';
 import {
   compareDates,
   getDateFormat,
@@ -102,9 +103,11 @@ const serviceNumberValidator = (l: LocalizationMap, serviceRx: RegExp): FieldVal
 // scientific notation ("1e10"), which Number() would otherwise accept as finite/valid.
 const PLAIN_DECIMAL_RX = /^\d{1,13}(\.\d{1,2})?$/;
 
+// Optional — the user may not remember the exact price paid — but whatever is
+// entered still has to be a valid, positive amount.
 const purchasePriceValidator = (l: LocalizationMap): FieldValidator =>
   (v) => {
-    if(!v) return String(l['ErrPurchasePriceRequired']);
+    if (!v) return '';
     if (!PLAIN_DECIMAL_RX.test(v)) return String(l['ErrPurchasePriceInvalid']);
     const amount = Number(v);
     if (amount <= 0) return String(l['ErrPurchasePriceZero']);
@@ -112,18 +115,141 @@ const purchasePriceValidator = (l: LocalizationMap): FieldValidator =>
   };
 
 const claimedAmountValidator = (l: LocalizationMap): FieldValidator =>
-  (v, fd) => {
+  (v) => {
     if (!v) return String(l['ErrClaimedAmountRequired']);
     if (!PLAIN_DECIMAL_RX.test(v)) return String(l['ErrClaimedAmountInvalid']);
     const claimed = Number(v);
     if (claimed <= 0) return String(l['ErrClaimedAmountZero']);
-    // @ts-ignore — purchasePrice is injected by validateItems via a spread+cast, not part of ClaimFormData
-    const rawPurchasePrice = String(fd.purchasePrice ?? '');
-    if (PLAIN_DECIMAL_RX.test(rawPurchasePrice) && claimed > Number(rawPurchasePrice)) {
-      return String(l['ErrClaimedAmountExceedsPurchase']);
+    return '';
+  };
+
+const THIRD_PARTY_NAME_RX = /^(?=.*\p{L})[\p{L} .'-]+$/u;
+const isOtherWhatWasAffected = (value: string): boolean =>
+  value.trim().toLocaleUpperCase() === 'OTHER' || value.trim().toLocaleUpperCase() === 'OTH';
+const thirdPartyNameValidator = (value: string, l: LocalizationMap): string => {
+  if (!value) return String(l['ErrThirdPartyNameRequired']);
+  if (value.length < Number(l['NameMinLength'])) return String(l['ErrThirdPartyNameTooShort']);
+  if (value.length > Number(l['NameMaxLength'])) return String(l['ErrThirdPartyNameTooLong']);
+  if (!THIRD_PARTY_NAME_RX.test(value)) return String(l['ErrThirdPartyNameInvalid']);
+  return '';
+};
+
+const otherWhatWasAffectedValidator = (value: string, l: LocalizationMap): string => {
+  if (!value) return String(l['ErrOtherWhatWasAffectedRequired']);
+  if (value.length < Number(l['OtherWhatWasAffectedMinLength'])) {
+    return String(l['ErrOtherWhatWasAffectedTooShort']);
+  }
+  if (value.length > Number(l['OtherWhatWasAffectedMaxLength'])) {
+    return String(l['ErrOtherWhatWasAffectedTooLong']);
+  }
+  return '';
+};
+
+const liabilityClaimedAmountValidator = (value: string, l: LocalizationMap): string => {
+  if (!value) return String(l['ErrLiabilityClaimedAmountRequired']);
+  const amount = Number(value);
+  // Covers negative and zero (and anything under a penny), not just negative —
+  // previously "amount < 0" let 0 and sub-0.01 values silently pass.
+  if (amount < 0.01) return String(l['ErrLiabilityClaimedAmountMinimum']);
+  if (amount > Number(l['LiabilityClaimedAmountMaximum'])) {
+    return String(l['ErrLiabilityClaimedAmountMaximum']);
+  }
+  return '';
+};
+
+// Pattern is data-driven (PropertyAddressPattern) rather than hardcoded, so the
+// allowed character set can be reconfigured without a code change.
+const propertyAddressValidator = (value: string, l: LocalizationMap): string => {
+  if (!value) return String(l['ErrPropertyAddressRequired']);
+  if (value.length < Number(l['PropertyAddressMinLength'])) return String(l['ErrPropertyAddressTooShort']);
+  if (value.length > Number(l['PropertyAddressMaxLength'])) return String(l['ErrPropertyAddressTooLong']);
+  const pattern = new RegExp(String(l['PropertyAddressPattern']), 'u');
+  return pattern.test(value) ? '' : String(l['ErrPropertyAddressInvalid']);
+};
+
+const licenceStartDateValidator = (l: LocalizationMap): FieldValidator =>
+  (v) => {
+    if (!v) return String(l['ErrLicenceStartDateRequired']);
+    const format = getDateFormat(l);
+    if (!isValidDisplayDate(v, format)) return String(l['ErrLicenceStartDateInvalidFormat']);
+    return isFutureDate(v, format) ? String(l['ErrLicenceStartDateFuture']) : '';
+  };
+
+// End date must be a future date (not today or in the past) AND strictly after the
+// start date — both violations are reported with the single message requested.
+const licenceEndDateValidator = (l: LocalizationMap) =>
+  (endDate: string, startDate: string): string => {
+    if (!endDate) return String(l['ErrLicenceEndDateRequired']);
+    const format = getDateFormat(l);
+    if (!isValidDisplayDate(endDate, format)) return String(l['ErrLicenceEndDateInvalidFormat']);
+    if (!isFutureDate(endDate, format)) return String(l['ErrLicenceEndDateNotAfterStart']);
+    if (startDate && isValidDisplayDate(startDate, format) && compareDates(endDate, startDate, format) <= 0) {
+      return String(l['ErrLicenceEndDateNotAfterStart']);
     }
     return '';
   };
+
+// Loose shape first (so non-numeric input gets the generic "invalid amount" message),
+// then a stricter check to call out "too many decimal places" as its own distinct error.
+const LOOSE_DECIMAL_RX = /^\d+(\.\d+)?$/;
+const TWO_DECIMAL_PLACES_RX = /^\d+(\.\d{1,2})?$/;
+
+const currencyMinValidator = (
+  l: LocalizationMap,
+  requiredKey: keyof LocalizationMap,
+  invalidKey: keyof LocalizationMap,
+  decimalPlacesKey: keyof LocalizationMap,
+  belowMinimumKey: keyof LocalizationMap
+): FieldValidator =>
+  (v) => {
+    if (!v) return String(l[requiredKey]);
+    if (!LOOSE_DECIMAL_RX.test(v)) return String(l[invalidKey]);
+    if (!TWO_DECIMAL_PLACES_RX.test(v)) return String(l[decimalPlacesKey]);
+    return Number(v) < 0.01 ? String(l[belowMinimumKey]) : '';
+  };
+
+const monthlyLicenceFeeValidator = (l: LocalizationMap): FieldValidator =>
+  currencyMinValidator(
+    l,
+    'ErrMonthlyLicenceFeeRequired',
+    'ErrMonthlyLicenceFeeInvalid',
+    'ErrMonthlyLicenceFeeDecimalPlaces',
+    'ErrMonthlyLicenceFeeZero'
+  );
+
+const amountYouAreClaimingValidator = (l: LocalizationMap): FieldValidator =>
+  currencyMinValidator(
+    l,
+    'ErrAmountYouAreClaimingRequired',
+    'ErrAmountYouAreClaimingInvalid',
+    'ErrAmountYouAreClaimingDecimalPlaces',
+    'ErrAmountYouAreClaimingZero'
+  );
+
+// LTO's "Description" field (distinct from the itemised/PEL description fields, each
+// with their own wording) — min/max length plus an allowed-character check.
+const licenceDescriptionValidator = (l: LocalizationMap): FieldValidator =>
+  (v) => {
+    if (v.length < Number(l['LicenceDescriptionMinLength'])) return String(l['ErrLicenceDescriptionTooShort']);
+    if (v.length > Number(l['LicenceDescriptionMaxLength'])) return String(l['ErrLicenceDescriptionTooLong']);
+    const pattern = new RegExp(String(l['LicenceDescriptionPattern']), 'u');
+    return pattern.test(v) ? '' : String(l['ErrLicenceDescriptionInvalid']);
+  };
+
+const incidentDescriptionValidator = (
+  rawValue: string,
+  trimmedValue: string,
+  l: LocalizationMap
+): string => {
+  if (!trimmedValue) return String(l['ErrIncidentDescriptionRequired']);
+  if (trimmedValue.length < Number(l['IncidentDescriptionMinLength'])) {
+    return String(l['ErrIncidentDescriptionTooShort']);
+  }
+  if (rawValue.length > Number(l['ItemDescriptionMaxLength'])) {
+    return String(l['ErrIncidentDescriptionTooLong']);
+  }
+  return '';
+};
 
 const datePurchasedValidator = (l: LocalizationMap): FieldValidator =>
   (v, fd) => {
@@ -212,14 +338,6 @@ const optionalPhoneFormat = (
     return phoneRx.test(v) ? '' : String(l['ErrPhoneFormat']).replace('{1}', String(phoneLen));
   };
 
-// Spouse/Dependent email isn't required, but if one is entered it must still be a
-// well-formed email address.
-const optionalEmailFormat = (l: LocalizationMap, emailRx: RegExp): FieldValidator =>
-  (v) => {
-    if (!v) return '';
-    return emailRx.test(v) ? '' : String(l['ErrEmailInvalid']);
-  };
-
 const dependentDateOfBirthValidator = (l: LocalizationMap): FieldValidator =>
   (v, fd) => {
     if (fd.relationship !== 'DP') return '';
@@ -243,6 +361,134 @@ const authorisationConfirmationValidator = (l: LocalizationMap): FieldValidator 
     ? String(l['ErrAuthorisationConfirmationRequired'])
     : '';
 
+// ── Per-cover-type item validators (kept separate so validateItems' own branching
+// stays flat — each of these carries its own, unshared nesting/complexity) ──
+
+const validatePersonalLiabilityItem = (
+  item: ClaimItem,
+  l: LocalizationMap
+): Record<string, string> => {
+  const errors: Record<string, string> = {};
+  const thirdPartyName = item.thirdPartyName?.trim() ?? '';
+  const whatWasAffected = item.whatWasAffected?.trim() ?? '';
+  const otherWhatWasAffected = item.otherWhatWasAffected?.trim() ?? '';
+  const haveYouAdmittedLiability = item.haveYouAdmittedLiability?.trim() ?? '';
+  const claimedAmount = item.claimedAmount?.trim() ?? '';
+  const rawItemDescription = item.itemDescription ?? '';
+  const itemDescription = rawItemDescription.trim();
+
+  const thirdPartyNameError = thirdPartyNameValidator(thirdPartyName, l);
+  if (thirdPartyNameError) errors.thirdPartyName = thirdPartyNameError;
+
+  if (!whatWasAffected) {
+    errors.whatWasAffected = String(l['ErrWhatWasAffectedRequired']);
+  }
+  if (isOtherWhatWasAffected(whatWasAffected)) {
+    const otherAffectedError = otherWhatWasAffectedValidator(otherWhatWasAffected, l);
+    if (otherAffectedError) errors.otherWhatWasAffected = otherAffectedError;
+  }
+  if (haveYouAdmittedLiability !== 'Yes' && haveYouAdmittedLiability !== 'No') {
+    errors.haveYouAdmittedLiability = String(l['ErrHaveYouAdmittedLiabilityRequired']);
+  }
+
+  const claimedError = liabilityClaimedAmountValidator(claimedAmount, l);
+  if (claimedError) errors.claimedAmount = claimedError;
+
+  const descError = incidentDescriptionValidator(rawItemDescription, itemDescription, l);
+  if (descError) errors.itemDescription = descError;
+
+  return errors;
+};
+
+const validateLicenceToOccupyItem = (
+  item: ClaimItem,
+  formData: ClaimFormData,
+  l: LocalizationMap
+): Record<string, string> => {
+  const errors: Record<string, string> = {};
+  const propertyAddress = item.propertyAddress?.trim() ?? '';
+  const licenceStartDate = item.licenceStartDate?.trim() ?? '';
+  const licenceEndDate = item.licenceEndDate?.trim() ?? '';
+  const monthlyLicenceFee = item.monthlyLicenceFee?.trim() ?? '';
+  const claimedAmount = item.claimedAmount?.trim() ?? '';
+  const whyUnableToUseProperty = item.whyUnableToUseProperty?.trim() ?? '';
+  const itemDescription = (item.itemDescription ?? '').trim();
+
+  const addressError = propertyAddressValidator(propertyAddress, l);
+  if (addressError) errors.propertyAddress = addressError;
+
+  const startDateError = licenceStartDateValidator(l)(licenceStartDate, formData);
+  if (startDateError) errors.licenceStartDate = startDateError;
+
+  const endDateError = licenceEndDateValidator(l)(licenceEndDate, licenceStartDate);
+  if (endDateError) errors.licenceEndDate = endDateError;
+
+  const feeError = monthlyLicenceFeeValidator(l)(monthlyLicenceFee, formData);
+  if (feeError) errors.monthlyLicenceFee = feeError;
+
+  const claimingError = amountYouAreClaimingValidator(l)(claimedAmount, formData);
+  if (claimingError) errors.claimedAmount = claimingError;
+
+  // The two checkbox groups share one comma-separated model field (each entry
+  // namespaced "<category>:<code>" — see reasonStorageKey in NonItemisedCoverFields)
+  // but are validated independently, each needing at least one selection.
+  const selectedReasons = whyUnableToUseProperty ? whyUnableToUseProperty.split(',').filter(Boolean) : [];
+  const hasWhatHappenedReason = selectedReasons.some(
+    reason => reason.startsWith(`${LIST_CATEGORIES.WHAT_HAPPENED_TYPE}:`)
+  );
+  const hasPropertyImpactReason = selectedReasons.some(
+    reason => reason.startsWith(`${LIST_CATEGORIES.PROPERTY_IMPACT_TYPE}:`)
+  );
+  if (!hasWhatHappenedReason) {
+    errors.whatHappenedReasons = String(l['ErrWhatHappenedReasonsRequired']);
+  }
+  if (!hasPropertyImpactReason) {
+    errors.propertyImpactReasons = String(l['ErrPropertyImpactReasonsRequired']);
+  }
+
+  const descError = licenceDescriptionValidator(l)(itemDescription, formData);
+  if (descError) errors.itemDescription = descError;
+
+  return errors;
+};
+
+const validateItemisedItem = (
+  item: ClaimItem,
+  formData: ClaimFormData,
+  l: LocalizationMap
+): Record<string, string> => {
+  const errors: Record<string, string> = {};
+  const itemType = item.itemType?.trim() ?? '';
+  const purchasePrice = item.purchasePrice?.trim() ?? '';
+  const claimedAmount = item.claimedAmount?.trim() ?? '';
+  const itemDescription = (item.itemDescription ?? '').trim();
+  const datePurchased = item.datePurchased?.trim() ?? '';
+
+  if (!itemType) {
+    errors.itemType = String(l['ErrItemTypeRequired']);
+  }
+
+  const purchaseError = purchasePriceValidator(l)(purchasePrice, formData);
+  if (purchaseError) errors.purchasePrice = purchaseError;
+
+  const claimedError = claimedAmountValidator(l)(claimedAmount, formData);
+  if (claimedError) errors.claimedAmount = claimedError;
+
+  const descError = minMax(
+    l,
+    'ErrItemDescriptionRequired',
+    'ErrItemDescriptionTooShort',
+    'ErrItemDescriptionTooLong',
+    l['ItemDescriptionMinLength'],
+    l['ItemDescriptionMaxLength']
+  )(itemDescription, formData);
+  if (descError) errors.itemDescription = descError;
+
+  const dateError = datePurchasedValidator(l)(datePurchased, formData);
+  if (dateError) errors.datePurchased = dateError;
+
+  return errors;
+};
 
 export const validateItems = (
   items: ClaimItem[],
@@ -252,52 +498,18 @@ export const validateItems = (
   const itemErrors: Array<Record<string, string>> = [];
 
   items.forEach((item, index) => {
+    const itemCoverType = item.itemCoverType?.trim() ?? '';
     const errors: Record<string, string> = {};
 
-    // Trim so whitespace-only input (e.g. a description of just spaces) can't
-    // slip past the required/min-length checks below.
-    const itemCoverType = item.itemCoverType?.trim() ?? '';
-    const itemType = item.itemType?.trim() ?? '';
-    const purchasePrice = item.purchasePrice?.trim() ?? '';
-    const claimedAmount = item.claimedAmount?.trim() ?? '';
-    const itemDescription = item.itemDescription?.trim() ?? '';
-    const datePurchased = item.datePurchased?.trim() ?? '';
-
-    // ✅ REQUIRED FIELDS
     if (!itemCoverType) {
       errors.itemCoverType = String(l['ErrItemCoverTypeRequired']);
+    } else if (itemCoverType === 'PEL') {
+      Object.assign(errors, validatePersonalLiabilityItem(item, l));
+    } else if (itemCoverType === 'LTO') {
+      Object.assign(errors, validateLicenceToOccupyItem(item, formData, l));
+    } else {
+      Object.assign(errors, validateItemisedItem(item, formData, l));
     }
-
-    if (!itemType) {
-      errors.itemType = String(l['ErrItemTypeRequired']);
-    }
-
-    // ✅ PURCHASE PRICE
-    const purchaseError = purchasePriceValidator(l)(purchasePrice, formData);
-    if (purchaseError) errors.purchasePrice = purchaseError;
-
-    // ✅ CLAIMED AMOUNT (important: compare with item's purchase price)
-    const claimedError = claimedAmountValidator(l)(
-      claimedAmount,
-      { ...formData, purchasePrice } as ClaimFormData
-
-    );
-    if (claimedError) errors.claimedAmount = claimedError;
-
-    // ✅ DESCRIPTION
-    const descError = minMax(
-      l,
-      'ErrItemDescriptionRequired',
-      'ErrItemDescriptionTooShort',
-      'ErrItemDescriptionTooLong',
-      l['ItemDescriptionMinLength'],
-      l['ItemDescriptionMaxLength']
-    )(itemDescription, formData);
-    if (descError) errors.itemDescription = descError;
-
-    // ✅ DATE
-    const dateError = datePurchasedValidator(l)(datePurchased, formData);
-    if (dateError) errors.datePurchased = dateError;
 
     itemErrors[index] = errors;
   });
@@ -349,14 +561,14 @@ const buildValidators = (l: LocalizationMap): Partial<Record<keyof ClaimFormData
 
     spouseFirstName:      conditionalMinMax(l, 'ErrFirstNameRequired', 'ErrFNTooShort', 'ErrFNTooLong', l['NameMinLength'], l['NameMaxLength'], isSpouse),
     spouseLastName:       conditionalMinMax(l, 'ErrLastNameRequired', 'ErrLNTooShort', 'ErrLNTooLong', l['NameMinLength'], l['NameMaxLength'], isSpouse),
-    spouseEmail:          optionalEmailFormat(l, emailRx),
+    spouseEmail:          conditionalEmail(l, emailRx, isSpouse),
     spousePhoneNumber:    optionalPhoneFormat(l, phoneRx, phoneLen),
 
     dependentFirstName:   conditionalMinMax(l, 'ErrFirstNameRequired', 'ErrFNTooShort', 'ErrFNTooLong', l['NameMinLength'], l['NameMaxLength'], isDependent),
     dependentLastName:    conditionalMinMax(l, 'ErrLastNameRequired', 'ErrLNTooShort', 'ErrLNTooLong', l['NameMinLength'], l['NameMaxLength'], isDependent),
     dependentDateOfBirth: dependentDateOfBirthValidator(l),
     dependentRelationship: conditionalReq(l, 'ErrDependentRelationshipRequired', isDependent),
-    dependentEmail:       optionalEmailFormat(l, emailRx),
+    dependentEmail:       conditionalEmail(l, emailRx, isDependent),
     dependentPhoneNumber: optionalPhoneFormat(l, phoneRx, phoneLen),
 
     authorisedFirstName:  conditionalMinMax(l, 'ErrFirstNameRequired', 'ErrFNTooShort', 'ErrFNTooLong', l['NameMinLength'], l['NameMaxLength'], isAuthorisedPerson),
