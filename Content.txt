@@ -1,46 +1,9 @@
-Plese make following changes for field validations and messages
+What is constellation
 
+What kind of features foes it bring from UI standpoint when compared to UI-Kit/Theme-Cosmos
 
-Property Address 
+Why is it needed to move to constellation from traditional UI
 
-Minimum / maximum characters - Minimum 5 characters, maximum 250 characters. Allow letters, numbers, spaces, apostrophes, hyphens, commas, full stops, forward slashes, ampersands and brackets. Make this regex configurable. Below are the 3 messages to be configured
-message 1: Property Address must be at least 5 characters.
-message 2: Property Address must be 250 characters or less.
-message 3: Property Address can only contain letters, numbers, spaces, apostrophes ('), hyphens (-), commas (,), full stops (.), forward slashes (/), ampersands (&) and brackets ().
+What kind of things i have to assess to understand if i really have to move to constellation
 
-
-Licence Start Date - Cannot be in future
-
-message 1: Licence Start Date cannot be in the future.
-
-Licence End Date - cannot be in past or today. should be greater than Licence Start Date
-
-message 1: Licence End Date must be after the Licence Start Date.
-
-If the dates are manually entered and not completely entered then show messages "Enter a valid Licence Start Date in DD/MM/YYYY format." and  "Enter a valid Licence End Date in DD/MM/YYYY format." respectively
-
-----------------------------------------------------------
-
-
-Description free text field validations - Minimum 20 characters, maximum 500 characters. Allow letters, numbers, spaces and standard punctuation.
-
-Validation Messages
-Enter at least 20 characters describing the circumstances of your claim.
-Enter no more than 500 characters.
-Enter a valid description using letters, numbers and standard punctuation.
-
-
-
-Atleast one checkbox should be selected from Why you were unable to use the property field options  (Message: Please select why you were unable to use the property.)
-Atleast one checkbox should be selected from Imact on the property field options (Message: Please select the impact on the property.
-
-
-Monthly Licece Fee : 
-
-Minimum value is £0.01. Zero and negative values must not be accepted.(Message: Monthly Licence Fee must be at least £0.01)
-No more than two decimal places are permitted (Message: Enter the Monthly Licence Fee using no more than two decimal places)
-
-Amount you are claiming:
-
-Minimum value is £0.01. Zero and negative values must not be accepted.(Message: Amount you are claiming must be at least £0.01)
-No more than two decimal places are permitted (Message: Enter the amount using no more than two decimal places.)
+What kind of preparatory work i have to do to in order to move to constellation
