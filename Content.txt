@@ -1,18 +1,49 @@
-Do NOT treat the "Response Required" options (e.g. "Yes / No / Unable to Confirm") as a 
-list you are classifying the answer into. You are extracting the LITERAL, VERBATIM text 
-that Trinity typed into the "Trinity Response / Details" cell — copy it exactly as written, 
-in full, including every word. Do not truncate, paraphrase, auto-complete, or round off to 
-the closest matching option. If Trinity typed "Unable to Confirm at this time", extract the 
+Extract the Trinity validation responses from the email content below and return them as a JSON array of exactly 9 objects, one per validation item, in this exact order and using these exact pyName values.
+
+## REQUIRED JSON SCHEMA
+Respond with ONLY the JSON structure defined or populated in this property {.ValidationFlags.pyAIAssistedField}. Return only the fields mentioned in the JSON object. Do not include any text before or after it. 
+
+Fill only the "pyValue" field for each object with what Trinity entered in the "Trinity Response / Details" column. Leave "pyName" and "pyDescription" exactly as given above.
+
+## ORIGINAL EMAIL BODY
+{.ValidationFlags.pyMessageBody}
+
+## CONTENT PARSING RULES
+When extracting the value for "pyValue", strip out ALL HTML tags, attributes, and markup (e.g. <p>, <span>, <div>, <br>, <font>, style="...", class="...") from the extracted text. Return only the clean, human-readable text content that Trinity actually typed into that cell — no tags, no inline styles, no HTML entities (convert &nbsp; to a space, &amp; to "&", etc.), and no leading/trailing whitespace or line breaks left behind by the removed tags.
+
+If HTML formatting caused the response to be broken into multiple text fragments (e.g. across multiple <p> or <span> elements within the same cell), merge them into a single continuous string, separated by a single space, preserving the original word order.
+
+Do NOT treat the "Response Required" options (e.g. "Yes / No / Unable to Confirm") as a list you are classifying the answer into. You are extracting the LITERAL, VERBATIM text that Trinity typed into the "Trinity Response / Details" cell — copy it exactly as written, in full, including every word. Do not truncate, paraphrase, auto-complete, or round off to the closest matching option. If Trinity typed "Unable to Confirm at this time", extract the 
 full phrase "Unable to Confirm at this time" — not just "Unable to Confirm" or "Unable to".
 
+A single response value may be split across multiple HTML tags, spans, or line-wrapped elements even mid-word or mid-phrase (e.g. "Unable to" in one element and "Confirm" in the next). Always read and concatenate ALL text content within a table cell (<td>) — from its opening tag to its closing tag — regardless of how many nested tags or line breaks appear inside it. Never stop at the first inner tag boundary.
 
-A single response value may be split across multiple HTML tags, spans, or line-wrapped 
-elements even mid-word or mid-phrase (e.g. "Unable to" in one element and "Confirm" in 
-the next). Always read and concatenate ALL text content within a table cell (<td>) — from 
-its opening tag to its closing tag — regardless of how many nested tags or line breaks 
-appear inside it. Never stop at the first inner tag boundary.
+Note: the "expected format" shown below is a guide for what the reply *should* look like — it does not limit what you extract. Always extract Trinity's actual written response in full, even if it differs from or extends beyond this format guide.
 
+The final pyValue must contain plain text only — never raw or partially-stripped HTML. Return only the JSON array, nothing else. 
 
-Note: the "expected format" shown below is a guide for what the reply *should* look like 
-— it does not limit what you extract. Always extract Trinity's actual written response 
-in full, even if it differs from or extends beyond this format guide.
+## ERROR RESPONSE
+
+If the requested extraction cannot be completed, do not return the normal output schema.
+
+Instead, respond ONLY with the JSON structure defined or populated in property {.PolicySchedule.AIErrorJSON}.
+
+Return the error JSON when:
+- No attachment is provided
+- Attachment cannot be read
+- Document is corrupted
+- Document is password protected
+- Unsupported document format
+- No extractable text is detected
+- Document is not an insurance policy schedule
+- Document content is insufficient for reliable extraction
+- Required information cannot be extracted with reasonable confidence
+- Processing fails for any reason
+- Safety or policy restrictions prevent processing
+
+For error responses:
+- Return ONLY the error JSON structure.
+- Populate ErrorCode, ErrorCategory and ErrorMessage appropriately.
+- Do not return markdown.
+- Do not return explanatory text outside the JSON.
+- Do not mix the success JSON and error JSON in the same response. 
