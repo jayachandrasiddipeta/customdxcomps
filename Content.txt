@@ -11,3 +11,8 @@ elements even mid-word or mid-phrase (e.g. "Unable to" in one element and "Confi
 the next). Always read and concatenate ALL text content within a table cell (<td>) — from 
 its opening tag to its closing tag — regardless of how many nested tags or line breaks 
 appear inside it. Never stop at the first inner tag boundary.
+
+
+Note: the "expected format" shown below is a guide for what the reply *should* look like 
+— it does not limit what you extract. Always extract Trinity's actual written response 
+in full, even if it differs from or extends beyond this format guide.
