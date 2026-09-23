@@ -1,23 +1,13 @@
-What is constellation
-
-What kind of features foes it bring from UI standpoint when compared to UI-Kit/Theme-Cosmos
-
-Why is it needed to move to constellation from traditional UI
-
-What kind of things i have to assess to understand if i really have to move to constellation
-
-What kind of preparatory work i have to do to in order to move to constellation
+Do NOT treat the "Response Required" options (e.g. "Yes / No / Unable to Confirm") as a 
+list you are classifying the answer into. You are extracting the LITERAL, VERBATIM text 
+that Trinity typed into the "Trinity Response / Details" cell — copy it exactly as written, 
+in full, including every word. Do not truncate, paraphrase, auto-complete, or round off to 
+the closest matching option. If Trinity typed "Unable to Confirm at this time", extract the 
+full phrase "Unable to Confirm at this time" — not just "Unable to Confirm" or "Unable to".
 
 
-
-When extracting the value for "pyValue", strip out ALL HTML tags, attributes, and markup 
-(e.g. <p>, <span>, <div>, <br>, <font>, style="...", class="...") from the extracted text. 
-Return only the clean, human-readable text content that Trinity actually typed into that 
-cell — no tags, no inline styles, no HTML entities (convert &nbsp; to a space, &amp; to "&", 
-etc.), and no leading/trailing whitespace or line breaks left behind by the removed tags.
-
-If HTML formatting caused the response to be broken into multiple text fragments (e.g. 
-across multiple <p> or <span> elements within the same cell), merge them into a single 
-continuous string, separated by a single space, preserving the original word order.
-
-The final pyValue must contain plain text only — never raw or partially-stripped HTML.
+A single response value may be split across multiple HTML tags, spans, or line-wrapped 
+elements even mid-word or mid-phrase (e.g. "Unable to" in one element and "Confirm" in 
+the next). Always read and concatenate ALL text content within a table cell (<td>) — from 
+its opening tag to its closing tag — regardless of how many nested tags or line breaks 
+appear inside it. Never stop at the first inner tag boundary.
