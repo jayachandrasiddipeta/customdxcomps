@@ -7,3 +7,17 @@ Why is it needed to move to constellation from traditional UI
 What kind of things i have to assess to understand if i really have to move to constellation
 
 What kind of preparatory work i have to do to in order to move to constellation
+
+
+
+When extracting the value for "pyValue", strip out ALL HTML tags, attributes, and markup 
+(e.g. <p>, <span>, <div>, <br>, <font>, style="...", class="...") from the extracted text. 
+Return only the clean, human-readable text content that Trinity actually typed into that 
+cell — no tags, no inline styles, no HTML entities (convert &nbsp; to a space, &amp; to "&", 
+etc.), and no leading/trailing whitespace or line breaks left behind by the removed tags.
+
+If HTML formatting caused the response to be broken into multiple text fragments (e.g. 
+across multiple <p> or <span> elements within the same cell), merge them into a single 
+continuous string, separated by a single space, preserving the original word order.
+
+The final pyValue must contain plain text only — never raw or partially-stripped HTML.
