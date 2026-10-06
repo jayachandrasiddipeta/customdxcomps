@@ -1,10 +1,39 @@
-It was indeed a special feeling this time attending the Pega Solution builder session in singapore with Braam, Smith where had a hands-on work to know more about the responsibilities of a solution builder and how to work with blueprint to generate a high-fidelty blueprint and then using the same to generate application in pega.
+REad through the below content and prepare a good solution design documentation for understanding purpose for the team members. Keep the content confined to Pega Constellation 25.1.3 version as its implemented on that version. Keep it simple and crisp for understanding purpose.
 
-Additionally, we got nice presentations on the new features of 26 as well from Alistair and Test Automation with AI assistannt by Jason. There are lotof features bundled in 26 where we have to do lot of work to understand the capabilities and use them in our porjects. Looking forward to explore them more and provide my learnings and opinions to wider community.
+ET Case processing
+-----------------------------
+When we generate an email to Trinity for policy validation processing, it is needed that the email which is sent out and the reply given by trinity should also be displayed to claim handler on the case for reference purpose, rather go to the attachments utility and download the email attachment to their local disk and open as HTML.
 
-Last year november when i attended the blueprint delivered session, i was a unknown to everyone in the room and this year it was a special feeling as Braam shocased/highlighted my contribution towards constellation on the PPT slide. Glad to see that the contributions to the pega community are recognized and celebrated.
+To avoid this problem in constellation, we have ET (Email Triage) case process which is generally used for processing an incoming mail through email channel and set up a triage action to create a business/service case and link the ET case to service case. Once linking is done, the incoming email is displayed on the service case using an email display widget setup on the review harness.
 
-We also got gold coins and goodies for people who asked great/unique/valid questions and it was good to see that the whole day of session did not seem to be tired but everyone left the room learning lot of things and opened doors for yearning to explore more.
+To adopt this ET case processing, we need to setup an new email channel (TrinityEmailAccount) with a new email account (TrinityEmailAccount) created by saving as the existing email account we have created to read the incoming email from trinity usign a standalone email listener (ReadTrinityEmail) where we do the parsing of the attachments and linking them manually to the claim case (TRI-XXX). Once linking is done, we push the case forward for further processing.
 
-Looking forward to attend more session in future
+Now we have to perform the steps as it is with ET case processing as well. We have setup the new email channel "TrinityEmailAccount" which will automatically create a new email listener and it will automatically perform the ET case creation, updation, linking, etc OOTB.
+
+However, there are few customizations implemented to ensure that we have smooth parsing and linking processes.
+
+Link the ET case to TRI case when incoming reply comes from trinity
+--------------------------------------------------------------------
+The Service email rule, pxCreateAndManageTriageWork is the activity setup which takes care of the creation, updation of ET case. When an incoming email reply comes from trinity, we need to look at the "TRI-XXX" case and link the "ET-XXX" case to it. This happens in pxCreateAndManageTriageWork when the extension point when rule "pyLinkByCaseIdFromSubjectEnabled" is true. However, there is a limitation to this functionality that the linking will only happen when the incoming email address (pyFrom) matches equally with the "TRI-XXX" case's .pxCreateOperator's email addres. This will be never be true as the pyFrom will always be "hello@talktotrinity.com" and the create operator can be anyone in the system (For webform case it wouldCS Gues User and for pega portal case it could be any claim handler's email address). Hence this functionality has to be customized not depending on the existing OOTB logic. Hence we have taken the java code in the pxCreateAndManageTriageWork and created a new function removing that additional check so that we can invoke this function once the ET case is created.
+
+Extension Flow - pyPreTriage
+	Custom utility activity - LinkETWithServiceCase
+		Custom function - LinkETToServiceCase
+		
+With the above setup the ET case will be linked to the TRI case successfully.
+
+Attachments linking to TRI case
+--------------------------------------
+The attachment sent in the incoming email will be saved on the ET case using data-workattach-file and link-attachment instances created automatically and the same attachments are linked to TRI case automatically. So no specific change is needed here..
+
+Parsing the email body content
+---------------------------------
+As we have a functionality to read the email body for the policy validation flag setup in a table in email body which will be filled by trinity when they send the reply, we should be parsing the content and extract the necessary information using AI. For this process, we have setupa gen AI connect rule "ClaimValidationFlagExtractor" which will be invoked once the ET and TRI are linked and attachment are also linked to the TRI case. However, we made a choice to call this gen ai processing during the ET case processing itself as we are dealing with the email body.
+
+Hence we have extended the "pyPostProcessTriageWork" activity to include this email extraction and pushing the case forward. We are doign the email extraction in this activity "PerformEmailExtraction" which will call the gen ai connect and then the output is saved onto the case. Once it is done, we check the condition of the TRI case to be in Awaiting trinity response state for it to move forward using the when rule NeedSLAAdjustment and then only adjust the SLA to push the TRI case forward using the PushWorkCaseAhead activity by passing the assignmentID.
+
+
+Future enhancement
+-------------------------
+There is an OOTB activty pxCreateOutboundTriageWork which initiates the ET case processing during the outbound email sending as well. We can explore this option so that we create the ET case immediately after we send the email to trinity and view the email sent in the email widget right after the email is sent and not to wait until the incoming email reply arrives and then see the email chain.
 
